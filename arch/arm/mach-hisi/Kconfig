@@ -8,6 +8,7 @@ config ARCH_HI3xxx
 	select CLKSRC_OF
 	select GENERIC_CLOCKEVENTS
 	select HAVE_ARM_SCU
+	select HAVE_ARM_SCU if SMP
 	select HAVE_ARM_TWD if SMP
 	select HAVE_SMP
 	select PINCTRL
