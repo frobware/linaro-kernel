@@ -87,3 +87,65 @@ struct smp_operations hi3xxx_smp_ops __initdata = {
 	.cpu_kill		= hi3xxx_cpu_kill,
 #endif
 };
+
+static void __init hix5hd2_smp_prepare_cpus(unsigned int max_cpus)
+{
+	unsigned long base = 0;
+	void __iomem *scu_base = NULL;
+
+	/*enabel scu*/
+	if (scu_a9_has_base()) {
+		base = scu_a9_get_base();
+		scu_base = ioremap(base, SZ_4K);
+		if (!scu_base) {
+			pr_err("ioremap(scu_base) failed\n");
+			return;
+		}
+		scu_enable(scu_base);
+		iounmap(scu_base);
+	}
+}
+
+
+/*
+ * copy startup code to sram, and flash cache.
+ * @start_addr: slave start phy address
+ * @jump_addr: slave jump phy address
+ */
+void hix5hd2_set_scu_boot_addr(unsigned int start_addr, unsigned int jump_addr)
+{
+	unsigned int *virtaddr;
+	unsigned int *p_virtaddr;
+
+	p_virtaddr = virtaddr = ioremap(start_addr, PAGE_SIZE);
+
+	*p_virtaddr++ = 0xe51ff004; /* ldr  pc, [pc, #-4] */
+	*p_virtaddr++ = jump_addr;  /* pc jump phy address */
+#if 0
+	smp_wmb(); /**/
+	__cpuc_flush_dcache_area((void *)virtaddr,
+		(size_t)((char *)p_virtaddr - (char *)virtaddr));
+	outer_clean_range(__pa(virtaddr), __pa(p_virtaddr));
+#endif
+	iounmap(virtaddr);
+}
+
+static int hix5hd2_boot_secondary(unsigned int cpu, struct task_struct *idle)
+{
+	unsigned int jumpaddr;
+	jumpaddr = (unsigned int)virt_to_phys(hix5hd2_secondary_startup);
+	hix5hd2_set_scu_boot_addr(0xFFFF0000, jumpaddr);
+	hix5hd2_set_cpu(cpu, true);
+	arch_send_wakeup_ipi_mask(cpumask_of(cpu));
+	return 0;
+}
+
+
+struct smp_operations hix5hd2_smp_ops __initdata = {
+	.smp_prepare_cpus	= hix5hd2_smp_prepare_cpus,
+	.smp_boot_secondary	= hix5hd2_boot_secondary,
+#ifdef CONFIG_HOTPLUG_CPU
+	.cpu_die		= hi3xxx_cpu_die,
+	.cpu_kill		= hi3xxx_cpu_kill,
+#endif
+};
