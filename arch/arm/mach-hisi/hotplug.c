@@ -132,6 +132,36 @@ static void set_cpu_hi3620(int cpu, bool enable)
 	}
 }
 
+static void set_cpu_hix5hd2(int cpu, bool enable)
+{
+	u32 val = 0;
+
+	if (enable) {
+		/* power on cpu1 */
+		val = readl_relaxed(ctrl_base + 0x1000);
+		val &=  ~(0x1 << 8);
+		val |= (0x1 << 7);
+		val &= ~(0x1 << 3);
+		writel_relaxed(val, ctrl_base + 0x1000);
+		/* unreset */
+		val = readl_relaxed(ctrl_base + 0x50);
+		val &= ~(0x1 << 17);
+		writel_relaxed(val, ctrl_base + 0x50);
+	} else {
+		/* power down cpu1 */
+		val = readl_relaxed(ctrl_base + 0x1000);
+		val &=  ~(0x1 << 8);
+		val |= (0x1 << 7);
+		val |= (0x1 << 3);
+		writel_relaxed(val, ctrl_base + 0x1000);
+
+		/* reset */
+		val = readl_relaxed(ctrl_base + 0x50);
+		val |= (0x1 << 17);
+		writel_relaxed(val, ctrl_base + 0x50);
+	}
+}
+
 static int hi3xxx_hotplug_init(void)
 {
 	struct device_node *node;
@@ -155,6 +185,27 @@ void hi3xxx_set_cpu(int cpu, bool enable)
 
 	if (id == HI3620_CTRL)
 		set_cpu_hi3620(cpu, enable);
+}
+
+void hix5hd2_set_cpu(int cpu, bool enable)
+{
+	struct device_node *node;
+	if (of_machine_is_compatible("hisilicon,hi3716")) {
+		if (!ctrl_base) {
+			node = of_find_compatible_node(NULL, NULL, "hisilicon,cpuctrl");
+			if (node) {
+				ctrl_base = of_iomap(node, 0);
+				if (!ctrl_base) {
+					pr_err("failed to map address\n");
+					return;
+				}
+			}
+		}
+
+		set_cpu_hix5hd2(cpu, enable);
+	}
+
+	return;
 }
 
 static inline void cpu_enter_lowpower(void)
