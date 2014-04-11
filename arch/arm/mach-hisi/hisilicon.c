@@ -51,7 +51,7 @@ static void __init hi3620_map_io(void)
 	iotable_init(hi3620_io_desc, ARRAY_SIZE(hi3620_io_desc));
 }
 
-static void hi3xxx_restart(unsigned int mode, const char *cmd)
+static void hi3xxx_restart(char mode, const char *cmd)
 {
 	struct device_node *np;
 	void __iomem *base;
@@ -88,3 +88,43 @@ DT_MACHINE_START(HI3620, "Hisilicon Hi3620 (Flattened Device Tree)")
 	.smp		= smp_ops(hi3xxx_smp_ops),
 	.restart	= hi3xxx_restart,
 MACHINE_END
+
+/* hix5hd2 series */
+static void hix5hd2_restart(char mode, const char *cmd)
+{
+	struct device_node *np;
+	void __iomem *base;
+	int offset;
+
+	np = of_find_compatible_node(NULL, NULL, "hisilicon,sctrl");
+	if (!np) {
+		pr_err("failed to find hisilicon,sctrl node\n");
+		return;
+	}
+	base = of_iomap(np, 0);
+	if (!base) {
+		pr_err("failed to map address in hisilicon,sysctrl node\n");
+		return;
+	}
+	if (of_property_read_u32(np, "reboot_reg", &offset) < 0) {
+		pr_err("failed to find reboot_reg property\n");
+		return;
+	}
+
+	writel_relaxed(0xdeadbeef, base + offset);
+
+	while (1)
+		cpu_do_idle();
+}
+
+static const char *hix5hd2_compat[] __initconst = {
+	"hisilicon,hi3716cv200",
+	NULL,
+};
+
+DT_MACHINE_START(HIX5HD2_DT, "Hisilicon X5HD2 (Flattened Device Tree)")
+	.dt_compat	= hix5hd2_compat,
+	.smp		= smp_ops(hix5hd2_smp_ops),
+	.restart	= hix5hd2_restart,
+MACHINE_END
+
