@@ -86,6 +86,7 @@ static struct hisi_gate_clock hix5hd2_gate_clks[] __initdata = {
 		CLK_SET_RATE_PARENT, 0xa0, 1, 0, },
 	{ HIX5HD2_MMC_CIU_RST, "rst_mmc_ciu", "clk_mmc_ciu",
 		CLK_SET_RATE_PARENT, 0xa0, 4, CLK_GATE_SET_TO_DISABLE, },
+#if 0
 	/*gsf*/
 	{ HIX5HD2_MAC0_BUS_CLK, "clk_mac0_bus", NULL, 0, 0xcc, 1, 0, },
 	{ HIX5HD2_MAC0_SYS_CLK, "clk_mac0_sys", NULL, 0, 0xcc, 3, 0, },
@@ -104,6 +105,7 @@ static struct hisi_gate_clock hix5hd2_gate_clks[] __initdata = {
 		 CLK_SET_RATE_PARENT, 0x120, 0, 0, },
 	{ HIX5HD2_FEPHY_RST, "rst_fephy", "clk_fephy",
 		CLK_SET_RATE_PARENT, 0x120, 4, CLK_GATE_SET_TO_DISABLE, },
+#endif
 };
 
 static DEFINE_SPINLOCK(_lock);
