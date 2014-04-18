@@ -151,7 +151,7 @@
 
 		/* unremovable emmc as mmcblk0 */
 		dwmmc_1: dwmmc1@f9830000 {
-			compatible = "hisilicon,hi3716-dw-mshc";
+			compatible = "hisilicon,hix5hd2-dw-mshc";
 			reg = <0xf9830000 0x1000>;
 			interrupts = <0 35 4>;
 			#address-cells = <1>;
