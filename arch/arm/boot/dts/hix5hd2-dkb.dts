@@ -15,7 +15,8 @@
 	compatible = "hisilicon,hi3716";
 
 	chosen {
-		bootargs = "console=ttyAMA0,115200";
+/*		bootargs = "console=ttyAMA0,115200";*/
+		bootargs = "console=ttyAMA0,115200 root=/dev/mmcblk0p7 rootfstype=ext4 rootwait rw blkdevparts=mmcblk0:1M(boot),4M(baseparam),4M(pqparam),4M(logo),8M(kernel),96M(rootfs),48M(rootfs2),-(others)";
 	};
 
 	cpus {
@@ -52,17 +53,29 @@
 				status = "okay";
 			};
 		};
-		mdio0:mdio0@f98403c0 {
-			status = "okay";
-			phy1:ethernet-phy@2 {
+		gmac0: ethernet@f9840000 {
+				phy-handle = <&phy0>;
+				phy-mode = "mii";
+				mac-address = [00 00 00 00 00 00];
+				status = "okay"; 
+			};
+		gmac1: ethernet@f9841000 {
+				phy-handle = <&phy1>;
+				phy-mode = "rgmii"; 
+				mac-address = [00 00 00 00 00 00];
+				status = "okay";
+			};
+		mdio0: mdio0@f98403c0 {
+                        status = "okay";
+			phy0: ethernet-phy@2 {
 				reg = <2>;
 			};
-		};
-		mdio1:mdio1@f98413c0 {
-			status = "okay";
-			phy2:ethernet-phy@1 {
+                };
+                mdio1: mdio1@f98413c0 {
+                        status = "okay";
+			phy1: ethernet-phy@1 {
 				reg = <1>;
 			};
-		};
+                };
 	};
 };
