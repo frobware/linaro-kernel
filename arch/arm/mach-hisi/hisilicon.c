@@ -96,23 +96,18 @@ static void hix5hd2_restart(enum reboot_mode mode, const char *cmd)
 	void __iomem *base;
 	int offset;
 
-	if (of_machine_is_compatible("hisilicon,hi3716")) {
-		np = of_find_compatible_node(NULL, NULL, "hisilicon,sctrl");
-		if (!np) {
-			pr_err("failed to find hisilicon,sctrl node\n");
-			return;
-		}
-		base = of_iomap(np, 0);
-		if (!base) {
-			pr_err("failed to map address in hisilicon,sysctrl node\n");
-			return;
-		}
-		if (of_property_read_u32(np, "reboot_reg", &offset) < 0) {
-			pr_err("failed to find reboot_reg property\n");
-			return;
-		}
-	} else {
-		pr_err("failed to find compatible machine dt\n");
+	np = of_find_compatible_node(NULL, NULL, "hisilicon,sctrl");
+	if (!np) {
+		pr_err("failed to find hisilicon,sctrl node\n");
+		return;
+	}
+	base = of_iomap(np, 0);
+	if (!base) {
+		pr_err("failed to map address in hisilicon,sysctrl node\n");
+		return;
+	}
+	if (of_property_read_u32(np, "reboot_reg", &offset) < 0) {
+		pr_err("failed to find reboot_reg property\n");
 		return;
 	}
 
@@ -123,7 +118,7 @@ static void hix5hd2_restart(enum reboot_mode mode, const char *cmd)
 }
 
 static const char *hix5hd2_compat[] __initconst = {
-	"hisilicon,hi3716",
+	"hisilicon,hi3716cv200",
 	NULL,
 };
 

@@ -12,7 +12,7 @@
 
 / {
 	model = "Hisilicon Hi3716 Development Board";
-	compatible = "hisilicon,hi3716";
+	compatible = "hisilicon,hi3716cv200";
 
 	chosen {
 /*		bootargs = "console=ttyAMA0,115200";*/

@@ -190,20 +190,19 @@ void hi3xxx_set_cpu(int cpu, bool enable)
 void hix5hd2_set_cpu(int cpu, bool enable)
 {
 	struct device_node *node;
-	if (of_machine_is_compatible("hisilicon,hi3716")) {
-		if (!ctrl_base) {
-			node = of_find_compatible_node(NULL, NULL, "hisilicon,cpuctrl");
-			if (node) {
-				ctrl_base = of_iomap(node, 0);
-				if (!ctrl_base) {
-					pr_err("failed to map address\n");
-					return;
-				}
+	
+	if (!ctrl_base) {
+		node = of_find_compatible_node(NULL, NULL, "hisilicon,cpuctrl");
+		if (node) {
+			ctrl_base = of_iomap(node, 0);
+			if (!ctrl_base) {
+				pr_err("failed to map address\n");
+				return;
 			}
 		}
-
-		set_cpu_hix5hd2(cpu, enable);
 	}
+
+	set_cpu_hix5hd2(cpu, enable);
 
 	return;
 }
