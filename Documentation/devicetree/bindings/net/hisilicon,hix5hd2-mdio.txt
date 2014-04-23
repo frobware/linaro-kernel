@@ -1,12 +1,12 @@
-* Hisilicon Hi3716CV2 MDIO Ethernet Controller interface
+* Hisilicon HiX5HD2 MDIO Ethernet Controller interface
 
 Required properties:
-- compatible: should be "allwinner,sun4i-mdio".
+- compatible: should be "hisilicon,higmac-mdio".
 - reg: address and length of the register set for the device.
 
 Example at the SoC level:
 mdio@f89403c0 {
-	compatible = "hisilicon,hi3716cv2-mdio";
+	compatible = "hisilicon,higmac-mdio";
 	reg = <0xf89403c0 0x14>;
 	#address-cells = <1>;
 	#size-cells = <0>;
