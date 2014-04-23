@@ -1079,7 +1079,7 @@ MODULE_DEVICE_TABLE(of, higmac_of_match);
 
 static struct platform_driver higmac_dev_driver = {
 	.driver = {
-		.name = "hi3716-hieth-gmac",
+		.name = "hix5hd2-hieth-gmac",
 		.of_match_table = higmac_of_match,
 	},
 	.probe		= higmac_dev_probe,
@@ -1091,5 +1091,5 @@ static struct platform_driver higmac_dev_driver = {
 module_platform_driver(higmac_dev_driver);
 
 MODULE_AUTHOR("ZMJUN");
-MODULE_DESCRIPTION("Hisilicon double GMAC driver, base on driver higmacv200 by CHH");
+MODULE_DESCRIPTION("Hisilicon GMAC driver");
 MODULE_LICENSE("GPL");
