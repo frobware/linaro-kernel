@@ -67,6 +67,10 @@
 #define HIX5HD2_MAC0_PHY_RST		144
 #define HIX5HD2_MAC1_PHY_RST		145
 
+/* */
+#define HIX5HD2_SATA_CLK                146
+#define HIX5HD2_USB_CLK			147
+
 #define HIX5HD2_NR_CLKS			256
 #endif	/* __DTS_HIX5HD2_CLOCK_H */
 
