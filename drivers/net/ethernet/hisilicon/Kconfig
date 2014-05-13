@@ -27,5 +27,10 @@ config HIP04_ETH
 	  If you wish to compile a kernel for a hardware with hisilicon p04 SoC and
 	  want to use the internal ethernet then you should answer Y to this.
 
+menuconfig HIX5HD2_ETH
+	tristate "Hisilicon X5HD2 Family Network Device Support"
+	select PHYLIB
+	help
+	  This selects the hix5hd2 mac family network device.
 
 endif # NET_VENDOR_HISILICON
