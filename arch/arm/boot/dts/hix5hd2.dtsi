@@ -160,6 +160,40 @@
 			clock-names = "ciu", "biu";
 		};
 
+		gmac0: ethernet@f9840000 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			phy-handle = <&phy0>;
+			phy-mode = "mii";
+			mac-address = [00 00 00 00 00 00];
+			compatible = "hisilicon,hix5hd2-mac";
+			reg = <0xf9840000 0x1000>,<0xf984300c 0x4>;
+			interrupts = <0 71 4>;
+			clocks = <&clock HIX5HD2_MAC0_CLK>;
+
+			phy0: ethernet-phy@2 {
+				reg = <2>;
+				compatible = "ethernet-phy-ieee802.3-c22";
+			};
+		};
+
+		gmac1: ethernet@f9841000 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			phy-handle = <&phy1>;
+			phy-mode = "rgmii";
+			mac-address = [00 00 00 00 00 00];
+			compatible = "hisilicon,hix5hd2-mac";
+			reg = <0xf9841000 0x1000>,<0xf9843010 0x4>;
+			interrupts = <0 72 4>;
+			clocks = <&clock HIX5HD2_MAC1_CLK>;
+
+			phy1: ethernet-phy@1 {
+				reg = <1>;
+				compatible = "ethernet-phy-ieee802.3-c22";
+			};
+		};
+
 		sctrl@f8000000 {
 			compatible = "hisilicon,sctrl";
 			reg = <0xf8000000 0x1000>;
