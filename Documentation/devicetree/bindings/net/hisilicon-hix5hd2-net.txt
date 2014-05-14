@@ -1,0 +1,35 @@
+Hisilicon hix5hd2 Ethernet Controller
+
+Required properties:
+- compatible: should be "hisilicon,hix5hd2-mac".
+- reg: address and length of the device register and interface register.
+- interrupts: interrupt for the device.
+- #address-cells: Must be <1>.
+- #size-cells: Must be <0>.
+- phy-mode: see ethernet.txt [1].
+- phy-handle: see ethernet.txt [1].
+- mac-address: see ethernet.txt [1].
+- clocks: Phandles to input clocks.
+
+- phy subnode: inherits from phy binding [2]
+
+[1] Documentation/devicetree/bindings/net/ethernet.txt
+[2] Documentation/devicetree/bindings/net/phy.txt
+
+Example:
+	gmac0: ethernet@f9840000 {
+		compatible = "hisilicon,hix5hd2-mac";
+		reg = <0xf9840000 0x1000>,<0xf984300c 0x4>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		phy-handle = <&phy0>;
+		phy-mode = "mii";
+		mac-address = [00 00 00 00 00 00];
+		interrupts = <0 71 4>;
+		clocks = <&clock HIX5HD2_MAC0_CLK>;
+
+		phy0: ethernet-phy@2 {
+			reg = <2>;
+			compatible = "ethernet-phy-ieee802.3-c22";
+		};
+	};
