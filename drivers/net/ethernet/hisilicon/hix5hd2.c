@@ -1019,8 +1019,6 @@ static int hix5hd2_dev_probe(struct platform_device *pdev)
 		goto out_destroy_queue;
 	}
 
-	if (!IS_ERR(priv->clk))
-		clk_disable_unprepare(priv->clk);
 	clk_disable_unprepare(priv->clk);
 
 	return ret;
