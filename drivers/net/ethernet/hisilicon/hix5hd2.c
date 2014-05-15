@@ -414,6 +414,17 @@ static int hix5hd2_net_set_mac_address(struct net_device *dev, void *p)
 	return ret;
 }
 
+static void hix5hd2_adjust_link(struct net_device *dev)
+{
+	struct hix5hd2_priv *priv = netdev_priv(dev);
+	struct phy_device *phy = priv->phy;
+
+	if ((priv->speed != phy->speed) || (priv->duplex != phy->duplex)) {
+		hix5hd2_config_port(dev, phy->speed, phy->duplex);
+		phy_print_status(phy);
+	}
+}
+
 static void hix5hd2_rx_refill(struct hix5hd2_priv *priv)
 {
 	struct hix5hd2_desc *desc;
@@ -457,63 +468,6 @@ static void hix5hd2_rx_refill(struct hix5hd2_priv *priv)
 		writel_relaxed(dma_byte(pos), priv->base + RX_FQ_WR_ADDR);
 }
 
-static void hix5hd2_adjust_link(struct net_device *dev)
-{
-	struct hix5hd2_priv *priv = netdev_priv(dev);
-	struct phy_device *phy = priv->phy;
-
-	if ((priv->speed != phy->speed) || (priv->duplex != phy->duplex)) {
-		hix5hd2_config_port(dev, phy->speed, phy->duplex);
-		phy_print_status(phy);
-	}
-}
-
-static void hix5hd2_destroy_hw_desc_queue(struct hix5hd2_priv *priv)
-{
-	int i;
-
-	for (i = 0; i < QUEUE_NUMS; i++) {
-		if (priv->pool[i].desc) {
-			dma_free_coherent(priv->dev, priv->pool[i].size,
-					priv->pool[i].desc,
-					priv->pool[i].phys_addr);
-			priv->pool[i].desc = NULL;
-		}
-	}
-}
-
-static int hix5hd2_init_hw_desc_queue(struct hix5hd2_priv *priv)
-{
-	struct device *dev = priv->dev;
-	struct hix5hd2_desc *virt_addr;
-	dma_addr_t phys_addr;
-	int size, i;
-
-	priv->rx_fq.count = RX_DESC_NUM;
-	priv->rx_bq.count = RX_DESC_NUM;
-	priv->tx_bq.count = TX_DESC_NUM;
-	priv->tx_rq.count = TX_DESC_NUM;
-
-	for (i = 0; i < QUEUE_NUMS; i++) {
-		size = priv->pool[i].count * sizeof(struct hix5hd2_desc);
-		virt_addr = dma_alloc_coherent(dev, size, &phys_addr,
-				GFP_KERNEL);
-		if (virt_addr == NULL)
-			goto error_free_pool;
-
-		memset(virt_addr, 0, size);
-		priv->pool[i].size = size;
-		priv->pool[i].desc = virt_addr;
-		priv->pool[i].phys_addr = phys_addr;
-	}
-	return 0;
-
-error_free_pool:
-	hix5hd2_destroy_hw_desc_queue(priv);
-
-	return -ENOMEM;
-}
-
 static int hix5hd2_rx(struct net_device *dev, int limit)
 {
 	struct hix5hd2_priv *priv = netdev_priv(dev);
@@ -532,16 +486,20 @@ static int hix5hd2_rx(struct net_device *dev, int limit)
 
 	for (i = 0, pos = start; i < num; i++) {
 		skb = priv->rx_skb[pos];
+
+		if (unlikely(!skb)) {
+			netdev_err(dev, "inconsistent rx_skb\n");
+			break;
+		}
+		priv->rx_skb[pos] = NULL;
+
 		desc = priv->rx_bq.desc + pos;
 		len = desc->data_len;
 		dma_addr = desc->data_buff_addr;
-
 		dma_unmap_single(priv->dev, dma_addr, MAC_MAX_FRAME_SIZE,
 				DMA_FROM_DEVICE);
 
 		skb_put(skb, len);
-		skb->protocol = eth_type_trans(skb, dev);
-
 		if (skb->len > MAC_MAX_FRAME_SIZE) {
 			netdev_err(dev, "rcv len err, len = %d\n", skb->len);
 			dev->stats.rx_errors++;
@@ -550,8 +508,8 @@ static int hix5hd2_rx(struct net_device *dev, int limit)
 			goto next;
 		}
 
+		skb->protocol = eth_type_trans(skb, dev);
 		napi_gro_receive(&priv->napi, skb);
-		priv->rx_skb[pos] = NULL;
 		dev->stats.rx_packets++;
 		dev->stats.rx_bytes += skb->len;
 		dev->last_rx = jiffies;
@@ -733,12 +691,10 @@ static int hix5hd2_net_open(struct net_device *dev)
 	struct hix5hd2_priv *priv = netdev_priv(dev);
 	int ret;
 
-	if (!IS_ERR(priv->clk)) {
-		ret = clk_prepare_enable(priv->clk);
-		if (ret < 0) {
-			netdev_err(dev, "failed to enable clk %d\n", ret);
-			return ret;
-		}
+	ret = clk_prepare_enable(priv->clk);
+	if (ret < 0) {
+		netdev_err(dev, "failed to enable clk %d\n", ret);
+		return ret;
 	}
 
 	priv->phy = of_phy_connect(dev, priv->phy_node,
@@ -776,8 +732,7 @@ static int hix5hd2_net_close(struct net_device *dev)
 		phy_disconnect(priv->phy);
 	}
 
-	if (!IS_ERR(priv->clk))
-		clk_disable_unprepare(priv->clk);
+	clk_disable_unprepare(priv->clk);
 
 	return 0;
 }
@@ -897,6 +852,52 @@ out:
 	return ret;
 }
 
+static void hix5hd2_destroy_hw_desc_queue(struct hix5hd2_priv *priv)
+{
+	int i;
+
+	for (i = 0; i < QUEUE_NUMS; i++) {
+		if (priv->pool[i].desc) {
+			dma_free_coherent(priv->dev, priv->pool[i].size,
+					priv->pool[i].desc,
+					priv->pool[i].phys_addr);
+			priv->pool[i].desc = NULL;
+		}
+	}
+}
+
+static int hix5hd2_init_hw_desc_queue(struct hix5hd2_priv *priv)
+{
+	struct device *dev = priv->dev;
+	struct hix5hd2_desc *virt_addr;
+	dma_addr_t phys_addr;
+	int size, i;
+
+	priv->rx_fq.count = RX_DESC_NUM;
+	priv->rx_bq.count = RX_DESC_NUM;
+	priv->tx_bq.count = TX_DESC_NUM;
+	priv->tx_rq.count = TX_DESC_NUM;
+
+	for (i = 0; i < QUEUE_NUMS; i++) {
+		size = priv->pool[i].count * sizeof(struct hix5hd2_desc);
+		virt_addr = dma_alloc_coherent(dev, size, &phys_addr,
+				GFP_KERNEL);
+		if (virt_addr == NULL)
+			goto error_free_pool;
+
+		memset(virt_addr, 0, size);
+		priv->pool[i].size = size;
+		priv->pool[i].desc = virt_addr;
+		priv->pool[i].phys_addr = phys_addr;
+	}
+	return 0;
+
+error_free_pool:
+	hix5hd2_destroy_hw_desc_queue(priv);
+
+	return -ENOMEM;
+}
+
 static int hix5hd2_dev_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
@@ -933,12 +934,16 @@ static int hix5hd2_dev_probe(struct platform_device *pdev)
 	}
 
 	priv->clk = devm_clk_get(&pdev->dev, NULL);
-	if (!IS_ERR(priv->clk)) {
-		ret = clk_prepare_enable(priv->clk);
-		if (ret < 0) {
-			netdev_err(ndev, "failed to enable clk %d\n", ret);
-			goto out_free_netdev;
-		}
+	if (IS_ERR(priv->clk)) {
+		netdev_err(ndev, "failed to get clk\n");
+		ret = -ENODEV;
+		goto out_free_netdev;
+	}
+
+	ret = clk_prepare_enable(priv->clk);
+	if (ret < 0) {
+		netdev_err(ndev, "failed to enable clk %d\n", ret);
+		goto out_free_netdev;
 	}
 
 	bus = mdiobus_alloc();
@@ -954,6 +959,7 @@ static int hix5hd2_dev_probe(struct platform_device *pdev)
 	bus->parent = &pdev->dev;
 	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
 	priv->bus = bus;
+
 	ret = of_mdiobus_register(bus, node);
 	if (ret)
 		goto err_free_mdio;
@@ -976,14 +982,14 @@ static int hix5hd2_dev_probe(struct platform_device *pdev)
 	if (ndev->irq <= 0) {
 		netdev_err(ndev, "No irq resource\n");
 		ret = -EINVAL;
-		goto out_disconnect;
+		goto out_phy_node;
 	}
 
 	ret = devm_request_irq(dev, ndev->irq, hix5hd2_interrupt,
 				0, pdev->name, ndev);
 	if (ret) {
 		netdev_err(ndev, "devm_request_irq failed\n");
-		goto out_disconnect;
+		goto out_phy_node;
 	}
 
 	mac_addr = of_get_mac_address(node);
@@ -1004,7 +1010,7 @@ static int hix5hd2_dev_probe(struct platform_device *pdev)
 
 	ret = hix5hd2_init_hw_desc_queue(priv);
 	if (ret)
-		goto out_disconnect;
+		goto out_phy_node;
 
 	netif_napi_add(ndev, &priv->napi, hix5hd2_poll, NAPI_POLL_WEIGHT);
 	ret = register_netdev(priv->netdev);
@@ -1015,13 +1021,14 @@ static int hix5hd2_dev_probe(struct platform_device *pdev)
 
 	if (!IS_ERR(priv->clk))
 		clk_disable_unprepare(priv->clk);
+	clk_disable_unprepare(priv->clk);
 
 	return ret;
 
 out_destroy_queue:
 	netif_napi_del(&priv->napi);
 	hix5hd2_destroy_hw_desc_queue(priv);
-out_disconnect:
+out_phy_node:
 	of_node_put(priv->phy_node);
 err_mdiobus:
 	mdiobus_unregister(bus);
