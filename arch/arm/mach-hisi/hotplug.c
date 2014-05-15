@@ -249,4 +249,11 @@ int hi3xxx_cpu_kill(unsigned int cpu)
 	hi3xxx_set_cpu(cpu, false);
 	return 1;
 }
+
+void hix5hd2_cpu_die(unsigned int cpu)
+{
+        flush_cache_all();
+        hix5hd2_set_cpu(cpu,false);
+}
+
 #endif

@@ -145,7 +145,6 @@ struct smp_operations hix5hd2_smp_ops __initdata = {
 	.smp_prepare_cpus	= hix5hd2_smp_prepare_cpus,
 	.smp_boot_secondary	= hix5hd2_boot_secondary,
 #ifdef CONFIG_HOTPLUG_CPU
-	.cpu_die		= hi3xxx_cpu_die,
-	.cpu_kill		= hi3xxx_cpu_kill,
+	.cpu_die		= hix5hd2_cpu_die,
 #endif
 };
