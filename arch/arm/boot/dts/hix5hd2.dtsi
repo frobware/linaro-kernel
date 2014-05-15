@@ -151,7 +151,7 @@
 
 		/* unremovable emmc as mmcblk0 */
 		dwmmc_1: dwmmc1@f9830000 {
-			compatible = "hisilicon,hix5hd2-dw-mshc";
+			compatible = "snps,dw-mshc";
 			reg = <0xf9830000 0x1000>;
 			interrupts = <0 35 4>;
 			#address-cells = <1>;
@@ -161,51 +161,38 @@
 		};
 
 		gmac0: ethernet@f9840000 {
-			compatible = "hisilicon,hix5hd2-hieth-gmac";
-			reg = <0xf9840000 0x1000>,<0xf984300c 0x4>;
-			interrupts = <0 71 4>;
-			clocks = <&clock HIX5HD2_FWD_BUS_CLK>,
-				<&clock HIX5HD2_FWD_SYS_CLK>,
-				<&clock HIX5HD2_MAC0_BUS_CLK>,
-				<&clock HIX5HD2_MAC0_SYS_CLK>,
-				<&clock HIX5HD2_MAC0_SYS_RST>,
-				<&clock HIX5HD2_MAC0_INTF_RST>,
-				<&clock HIX5HD2_MAC0_PHY_RST>,
-				<&clock HIX5HD2_MAC0_PHY_CLK>;	
-			clock-names = "clk_pub_bus","clk_pub","clk_mac_bus","clk_mac","rst_mac","rst_mac_intf","rst_phy","clk_phy";
-			status = "disabled";
-		};
-		
-		gmac1: ethernet@f9841000 {
-			compatible = "hisilicon,hix5hd2-hieth-gmac";
-			reg = <0xf9841000 0x1000>,<0xf9843010 0x4>;
-			interrupts = <0 72 4>;
-			clocks = <&clock HIX5HD2_FWD_BUS_CLK>,
-                                <&clock HIX5HD2_FWD_SYS_CLK>,
-                                <&clock HIX5HD2_MAC1_BUS_CLK>,
-                                <&clock HIX5HD2_MAC1_SYS_CLK>,
-                                <&clock HIX5HD2_MAC1_SYS_RST>,
-                                <&clock HIX5HD2_MAC1_INTF_RST>,
-                                <&clock HIX5HD2_MAC1_PHY_RST>;
-                        clock-names = "clk_pub_bus","clk_pub","clk_mac_bus","clk_mac","rst_mac","rst_mac_intf","rst_phy";
-			status = "disabled";
-		};
- 		
-		mdio0:mdio0@f98403c0 {
-                        compatible = "hisilicon,higmac-mdio";
-                        reg = <0xf98403c0 0x14>;
+			compatible = "hisilicon,hix5hd2-mac";
+                        reg = <0xf9840000 0x1000>,<0xf984300c 0x4>;
                         #address-cells = <1>;
                         #size-cells = <0>;
-			status = "disabled";
+                        phy-handle = <&phy0>;
+                        phy-mode = "mii";
+                        mac-address = [00 00 00 00 00 00];
+                        interrupts = <0 71 4>;
+                        clocks = <&clock HIX5HD2_MAC0_CLK>;
+
+                        phy0: ethernet-phy@2 {
+                                reg = <2>;
+                                compatible = "ethernet-phy-ieee802.3-c22";
+                        };
                 };
- 		
-		mdio1:mdio1@f98413c0 {
-                        compatible = "hisilicon,higmac-mdio";
-                        reg = <0xf98413c0 0x14>;
+
+                gmac1: ethernet@f9841000 {
+                        compatible = "hisilicon,hix5hd2-mac";
+                        reg = <0xf9841000 0x1000>,<0xf9843010 0x4>;
                         #address-cells = <1>;
                         #size-cells = <0>;
-			status = "disabled";
-                };
+                        phy-handle = <&phy1>;
+                        phy-mode = "rgmii";
+                        mac-address = [00 00 00 00 00 00];
+                        interrupts = <0 72 4>;
+                        clocks = <&clock HIX5HD2_MAC1_CLK>;
+
+                        phy1: ethernet-phy@1 {
+                                reg = <1>;
+                                compatible = "ethernet-phy-ieee802.3-c22";
+                        };
+		};
 		
 		ehci@f9890000 {
         	        compatible = "hisilicon,hix5hd2-ehci","generic-ehci";

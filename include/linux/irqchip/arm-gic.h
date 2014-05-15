@@ -21,6 +21,8 @@
 #define GIC_CPU_ACTIVEPRIO		0xd0
 #define GIC_CPU_IDENT			0xfc
 
+#define GICC_IAR_INT_ID_MASK		0x3ff
+
 #define GIC_DIST_CTRL			0x000
 #define GIC_DIST_CTR			0x004
 #define GIC_DIST_IGROUP			0x080
@@ -47,6 +49,8 @@
 #define GICH_ELRSR1 			0x34
 #define GICH_APR			0xf0
 #define GICH_LR0			0x100
+#define HIP04_GICH_APR			0x70
+/* GICH_LR0 offset in HiP04 is 0x80 */
 
 #define GICH_HCR_EN			(1 << 0)
 #define GICH_HCR_UIE			(1 << 1)
@@ -70,6 +74,10 @@
 
 #define GICH_MISR_EOI			(1 << 0)
 #define GICH_MISR_U			(1 << 1)
+
+#define HWCFG_NR_LR_MASK	0xffff
+#define HWCFG_APR_MASK		0xffff
+#define HWCFG_APR_SHIFT		16
 
 #ifndef __ASSEMBLY__
 

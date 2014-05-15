@@ -918,11 +918,22 @@ config ARCH_MULTI_V6
 	select CPU_V6K
 
 config ARCH_MULTI_V7
-	bool "ARMv7 based platforms (Cortex-A, PJ4, Scorpion, Krait)"
+	bool "ARMv7 based platforms"
 	default y
 	select ARCH_MULTI_V6_V7
 	select CPU_V7
 	select HAVE_SMP
+
+config ARCH_MULTI_V7_NONLPAE
+	bool "ARMv7 non-LPAE based platforms (Cortex-A5/A8/A9, PJ4, PJ4B, Scorpion)"
+	depends on ARCH_MULTI_V7
+	default y
+
+config ARCH_MULTI_V7_LPAE
+	bool "ARMv7 LPAE based platforms (Cortex-A7/A12/A15/A17, Brahma-B15, PJ4B-MP, Krait)"
+	depends on ARCH_MULTI_V7
+	default y
+	select ARM_LPAE if !(ARCH_MULTI_V6 || ARCH_MULTI_V7_NONLPAE)
 
 config ARCH_MULTI_V6_V7
 	bool
@@ -1563,6 +1574,15 @@ config MCPM
 	  This option provides the common power management infrastructure
 	  for (multi-)cluster based systems, such as big.LITTLE based
 	  systems.
+
+config MCPM_QUAD_CLUSTER
+	bool "Enable Quad clusters in MCPM"
+	depends on MCPM
+	help
+	  To avoid wasting resources unnecessarily, MCPM only supports up
+	  to 2 clusters by default.
+	  Platforms with 3 or 4 clusters that use MCPM must select this
+	  option to allow the additional clusters to be managed.
 
 config BIG_LITTLE
 	bool "big.LITTLE support (Experimental)"

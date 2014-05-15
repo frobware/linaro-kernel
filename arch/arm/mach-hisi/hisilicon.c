@@ -17,6 +17,7 @@
 #include <linux/of_address.h>
 #include <linux/of_platform.h>
 
+#include <asm/hardware/cache-l2x0.h>
 #include <asm/proc-fns.h>
 
 #include <asm/mach/arch.h>
@@ -49,6 +50,12 @@ static void __init hi3620_map_io(void)
 {
 	debug_ll_io_init();
 	iotable_init(hi3620_io_desc, ARRAY_SIZE(hi3620_io_desc));
+}
+
+static void __init hi3xxx_init(void)
+{
+	l2x0_of_init(0, ~0);
+	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
 }
 
 static void hi3xxx_restart(enum reboot_mode mode, const char *cmd)
@@ -86,8 +93,21 @@ DT_MACHINE_START(HI3620, "Hisilicon Hi3620 (Flattened Device Tree)")
 	.map_io		= hi3620_map_io,
 	.dt_compat	= hi3xxx_compat,
 	.smp		= smp_ops(hi3xxx_smp_ops),
+	.init_machine	= hi3xxx_init,
 	.restart	= hi3xxx_restart,
 MACHINE_END
+
+#ifdef CONFIG_ARCH_HIP04
+static const char *hip04_compat[] __initconst = {
+	"hisilicon,hip04-d01",
+	NULL,
+};
+
+DT_MACHINE_START(HIP04, "Hisilicon HiP04 (Flattened Device Tree)")
+	.dt_compat	= hip04_compat,
+	.smp_init	= smp_init_ops(hip04_smp_init_ops),
+MACHINE_END
+#endif
 
 /* hix5hd2 series */
 static void hix5hd2_restart(enum reboot_mode mode, const char *cmd)
@@ -96,18 +116,23 @@ static void hix5hd2_restart(enum reboot_mode mode, const char *cmd)
 	void __iomem *base;
 	int offset;
 
-	np = of_find_compatible_node(NULL, NULL, "hisilicon,sctrl");
-	if (!np) {
-		pr_err("failed to find hisilicon,sctrl node\n");
-		return;
-	}
-	base = of_iomap(np, 0);
-	if (!base) {
-		pr_err("failed to map address in hisilicon,sysctrl node\n");
-		return;
-	}
-	if (of_property_read_u32(np, "reboot_reg", &offset) < 0) {
-		pr_err("failed to find reboot_reg property\n");
+	if (of_machine_is_compatible("hisilicon,hi3716")) {
+		np = of_find_compatible_node(NULL, NULL, "hisilicon,sctrl");
+		if (!np) {
+			pr_err("failed to find hisilicon,sctrl node\n");
+			return;
+		}
+		base = of_iomap(np, 0);
+		if (!base) {
+			pr_err("failed to map address in hisilicon,sysctrl node\n");
+			return;
+		}
+		if (of_property_read_u32(np, "reboot_reg", &offset) < 0) {
+			pr_err("failed to find reboot_reg property\n");
+			return;
+		}
+	} else {
+		pr_err("failed to find compatible machine dt\n");
 		return;
 	}
 
@@ -127,4 +152,3 @@ DT_MACHINE_START(HIX5HD2_DT, "Hisilicon X5HD2 (Flattened Device Tree)")
 	.smp		= smp_ops(hix5hd2_smp_ops),
 	.restart	= hix5hd2_restart,
 MACHINE_END
-
