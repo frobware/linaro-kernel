@@ -1,11 +1,11 @@
 #
-# HISILICON network device configuration
+# HISILICON device configuration
 #
 
 config NET_VENDOR_HISILICON
 	bool "Hisilicon devices"
-	depends on ARCH_HIX5HD2 
 	default y
+	depends on ARM
 	---help---
 	  If you have a network (Ethernet) card belonging to this class, say Y
 	  and read the Ethernet-HOWTO, available from
@@ -13,16 +13,15 @@ config NET_VENDOR_HISILICON
 
 	  Note that the answer to this question doesn't directly affect the
 	  kernel: saying N will just cause the configurator to skip all
-	  the questions about Hisilicon cards. If you say Y, you will be asked for
-	  your specific card in the following questions.
+	  the questions about Hisilicon devices. If you say Y, you will be asked
+	  for your specific card in the following questions.
 
 if NET_VENDOR_HISILICON
 
-menuconfig HIETH_GMAC
-        tristate "Hisilicon GMAC Family Network Device Support"
-        default y
-        help
-          This selects the hieth gmac family network device.
-source "drivers/net/ethernet/hisilicon/hieth-gmac/Kconfig"
+menuconfig HIX5HD2_ETH
+	tristate "Hisilicon X5HD2 Family Network Device Support"
+	select PHYLIB
+	help
+	  This selects the hix5hd2 mac family network device.
 
 endif # NET_VENDOR_HISILICON

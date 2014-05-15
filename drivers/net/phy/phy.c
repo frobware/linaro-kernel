@@ -715,7 +715,7 @@ void phy_state_machine(struct work_struct *work)
 	struct delayed_work *dwork = to_delayed_work(work);
 	struct phy_device *phydev =
 			container_of(dwork, struct phy_device, state_queue);
-	int needs_aneg = 0, do_suspend = 0;
+	int needs_aneg = 0, do_suspend = 0, do_resume = 0;
 	int err = 0;
 
 	mutex_lock(&phydev->lock);
@@ -865,6 +865,8 @@ void phy_state_machine(struct work_struct *work)
 			}
 			phydev->adjust_link(phydev->attached_dev);
 		}
+
+		do_resume = 1;
 		break;
 	}
 
@@ -875,6 +877,9 @@ void phy_state_machine(struct work_struct *work)
 
 	if (do_suspend)
 		phy_suspend(phydev);
+
+	if (do_resume)
+		phy_resume(phydev);
 
 	if (err < 0)
 		phy_error(phydev);
