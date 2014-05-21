@@ -174,6 +174,20 @@
 			clocks = <&clock HIX5HD2_MAC1_CLK>;
 		};
 
+		ehci@f9890000 {
+		        compatible = "hisilicon,hix5hd2-ehci","generic-ehci";
+			reg = <0xf9890000 0x1000>;
+			interrupts = <0 66 4>;
+			clocks = <&clock HIX5HD2_USB_CLK>;
+	        };
+
+		ohci@f9880000 {
+			compatible = "hisilicon,hix5hd2-ohci","generic-ohci";
+			reg = <0xf9880000 0x1000>;
+			interrupts = <0 67 4>;
+			clocks = <&clock HIX5HD2_USB_CLK>;
+		};
+
 		sctrl@f8000000 {
 			compatible = "hisilicon,sctrl";
 			reg = <0xf8000000 0x1000>;
