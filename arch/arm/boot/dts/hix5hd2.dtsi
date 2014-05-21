@@ -160,6 +160,20 @@
 			clock-names = "ciu", "biu";
 		};
 
+		gmac0: ethernet@f9840000 {
+			compatible = "hisilicon,hix5hd2-gmac";
+			reg = <0xf9840000 0x1000>,<0xf984300c 0x4>;
+			interrupts = <0 71 4>;
+			clocks = <&clock HIX5HD2_MAC0_CLK>;
+		};
+
+		gmac1: ethernet@f9841000 {
+			compatible = "hisilicon,hix5hd2-gmac";
+			reg = <0xf9841000 0x1000>,<0xf9843010 0x4>;
+			interrupts = <0 72 4>;
+			clocks = <&clock HIX5HD2_MAC1_CLK>;
+		};
+
 		sctrl@f8000000 {
 			compatible = "hisilicon,sctrl";
 			reg = <0xf8000000 0x1000>;
