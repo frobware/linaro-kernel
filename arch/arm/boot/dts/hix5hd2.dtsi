@@ -188,11 +188,23 @@
 			clocks = <&clock HIX5HD2_USB_CLK>;
 		};
 
+		ahci:sata@f9900000 {
+                        compatible = "hisilicon,hix5hd2-ahci";
+                        reg = <0xf9900000 0x10000>;
+                        interrupts = <0 70 4>;
+                        clocks = <&clock HIX5HD2_SATA_CLK>;
+		};
+
 		sctrl@f8000000 {
 			compatible = "hisilicon,sctrl";
 			reg = <0xf8000000 0x1000>;
 			smp_reg = <0xc0>;
 			reboot_reg = <0x4>;
+		};
+
+		peri_ctrl:syscon@f8a20000 {
+			compatible = "syscon";
+			reg = <0xf8a20000 0x1000>;
 		};
 
 		clkbase@f8a22000 {
