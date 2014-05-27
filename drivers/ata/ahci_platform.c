@@ -76,6 +76,7 @@ static const struct of_device_id ahci_of_match[] = {
 	{ .compatible = "snps,exynos5440-ahci", },
 	{ .compatible = "ibm,476gtr-ahci", },
 	{ .compatible = "snps,dwc-ahci", },
+	{ .compatible = "hisilicon,hix5hd2-ahci"},
 	{},
 };
 MODULE_DEVICE_TABLE(of, ahci_of_match);
