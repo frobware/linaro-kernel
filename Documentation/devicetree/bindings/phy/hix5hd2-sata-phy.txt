@@ -1,0 +1,26 @@
+Hisilicon hix5hd2 SATA PHY
+-----------------------
+
+Required properties:
+- compatible : should be "hisilicon,hix5hd2-sata-phy"
+- reg : a list of offset + length pairs
+- #phy-cells: must be 0
+Refer to phy/phy-bindings.txt for the generic PHY binding properties
+
+Optional Properties:
+- hisilicon,syscon : phandle of syscon.
+- hisilicon,power-reg :offset and bit number of the sata power supply
+  register.It's needed when hisilicon,syscon is supplied.
+- hisilicon,reg-init : one of more sets of 4 cells.  The first cell
+  is the register offset address, the second cell is the start bit in register,
+  the third cell means the bit width, and the fourth cell is the value to set.
+
+Example:
+	sata_phy: phy@f9900000 {
+                        compatible = "hisilicon,hix5hd2-sata-phy";
+                        reg = <0xf9900000 0x10000>;
+                        #phy-cells = <0>;
+			hisilicon,syscon = <&peri_ctrl>;
+			hisilicon,power-reg = <0x8 10>;
+                        hisilicon,reg-init = <0x148 0 32 0x345cb8>,<0x14c 0 32 0x20545>;
+                };

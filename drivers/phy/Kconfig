@@ -31,6 +31,12 @@ config PHY_MVEBU_SATA
 	depends on OF
 	select GENERIC_PHY
 
+config PHY_HIX5HD2_SATA
+	bool "HIX5HD2 SATA PHY Driver"
+	depends on ARCH_HIX5HD2
+	depends on OF
+	select GENERIC_PHY
+
 config OMAP_CONTROL_PHY
 	tristate "OMAP CONTROL PHY Driver"
 	help
