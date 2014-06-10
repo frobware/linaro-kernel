@@ -134,7 +134,7 @@ static struct hix5hd2_complex_clock hix5hd2_complex_clks[] __initdata = {
 	{"clk_sata", NULL, HIX5HD2_SATA_CLK,
 		0xa8, 0x1f, 0x300, 0xac, 0x1, 0x0, TYPE_COMPLEX},
 	{"clk_usb", NULL, HIX5HD2_USB_CLK,
-		0xb8, 0xff, 0x3f00, 0xbc, 0x7, 0x3f00, TYPE_COMPLEX},
+		0xb8, 0xff, 0x3f000, 0xbc, 0x7, 0x3f00, TYPE_COMPLEX},
 };
 
 #define to_complex_clk(_hw) container_of(_hw, struct hix5hd2_clk_complex, hw)
