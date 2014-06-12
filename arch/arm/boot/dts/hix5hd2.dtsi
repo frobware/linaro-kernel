@@ -132,6 +132,241 @@
 				clock-names = "apb_pclk";
 				status = "disabled";
 			};
+
+			gpio0: gpio@f8b20000 {
+                                compatible = "arm,pl061", "arm,primecell";
+                                reg = <0xf8b20000 0x1000>;
+                                interrupts = <0 108 0x4>;
+                                gpio-controller;
+                                #gpio-cells = <2>;
+				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clock-names = "apb_pclk";
+                                interrupt-controller;
+                                #interrupt-cells = <2>;
+                                status = "disabled";
+                        };
+
+			gpio1: gpio@f8b21000 {
+                                compatible = "arm,pl061", "arm,primecell";
+                                reg = <0xf8b21000 0x1000>;
+                                interrupts = <0 109 0x4>;
+                                gpio-controller;
+                                #gpio-cells = <2>;
+				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clock-names = "apb_pclk";
+                                interrupt-controller;
+                                #interrupt-cells = <2>;
+                                status = "disabled";
+                        };
+
+			gpio2: gpio@f8b22000 {
+                                compatible = "arm,pl061", "arm,primecell";
+                                reg = <0xf8b22000 0x1000>;
+                                interrupts = <0 110 0x4>;
+                                gpio-controller;
+                                #gpio-cells = <2>;
+				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clock-names = "apb_pclk";
+                                interrupt-controller;
+                                #interrupt-cells = <2>;
+                                status = "disabled";
+                        };
+
+			gpio3: gpio@f8b23000 {
+                                compatible = "arm,pl061", "arm,primecell";
+                                reg = <0xf8b23000 0x1000>;
+                                interrupts = <0 111 0x4>;
+                                gpio-controller;
+                                #gpio-cells = <2>;
+				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clock-names = "apb_pclk";
+                                interrupt-controller;
+                                #interrupt-cells = <2>;
+                                status = "disabled";
+                        };
+
+			gpio4: gpio@f8b24000 {
+                                compatible = "arm,pl061", "arm,primecell";
+                                reg = <0xf8b24000 0x1000>;
+                                interrupts = <0 112 0x4>;
+                                gpio-controller;
+                                #gpio-cells = <2>;
+				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clock-names = "apb_pclk";
+                                interrupt-controller;
+                                #interrupt-cells = <2>;
+                                status = "disabled";
+                        };
+
+			gpio5: gpio@f8004000 {
+                                compatible = "arm,pl061", "arm,primecell";
+                                reg = <0xf8004000 0x1000>;
+                                interrupts = <0 113 0x4>;
+                                gpio-controller;
+                                #gpio-cells = <2>;
+				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clock-names = "apb_pclk";
+                                interrupt-controller;
+                                #interrupt-cells = <2>;
+                                status = "disabled";
+                        };
+
+			gpio6: gpio@f8b26000 {
+                                compatible = "arm,pl061", "arm,primecell";
+                                reg = <0xf8b26000 0x1000>;
+                                interrupts = <0 114 0x4>;
+                                gpio-controller;
+                                #gpio-cells = <2>;
+				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clock-names = "apb_pclk";
+                                interrupt-controller;
+                                #interrupt-cells = <2>;
+                                status = "disabled";
+                        };
+
+			gpio7: gpio@f8b27000 {
+                                compatible = "arm,pl061", "arm,primecell";
+                                reg = <0xf8b27000 0x1000>;
+                                interrupts = <0 115 0x4>;
+                                gpio-controller;
+                                #gpio-cells = <2>;
+				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clock-names = "apb_pclk";
+                                interrupt-controller;
+                                #interrupt-cells = <2>;
+                                status = "disabled";
+                        };
+
+			gpio8: gpio@f8b28000 {
+                                compatible = "arm,pl061", "arm,primecell";
+                                reg = <0xf8b28000 0x1000>;
+                                interrupts = <0 116 0x4>;
+                                gpio-controller;
+                                #gpio-cells = <2>;
+				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clock-names = "apb_pclk";
+                                interrupt-controller;
+                                #interrupt-cells = <2>;
+                                status = "disabled";
+                        };
+
+			gpio9: gpio@f8b29000 {
+                                compatible = "arm,pl061", "arm,primecell";
+                                reg = <0xf8b29000 0x1000>;
+                                interrupts = <0 117 0x4>;
+                                gpio-controller;
+                                #gpio-cells = <2>;
+				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clock-names = "apb_pclk";
+                                interrupt-controller;
+                                #interrupt-cells = <2>;
+                                status = "disabled";
+                        };
+
+			gpio10: gpio@f8b2a000 {
+                                compatible = "arm,pl061", "arm,primecell";
+                                reg = <0xf8b2a000 0x1000>;
+                                interrupts = <0 118 0x4>;
+                                gpio-controller;
+                                #gpio-cells = <2>;
+				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clock-names = "apb_pclk";
+                                interrupt-controller;
+                                #interrupt-cells = <2>;
+                                status = "disabled";
+                        };
+
+			gpio11: gpio@f8b2b000 {
+                                compatible = "arm,pl061", "arm,primecell";
+                                reg = <0xf8b2b000 0x1000>;
+                                interrupts = <0 119 0x4>;
+                                gpio-controller;
+                                #gpio-cells = <2>;
+				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clock-names = "apb_pclk";
+                                interrupt-controller;
+                                #interrupt-cells = <2>;
+                                status = "disabled";
+                        };
+
+			gpio12: gpio@f8b2c000 {
+                                compatible = "arm,pl061", "arm,primecell";
+                                reg = <0xf8b2c000 0x1000>;
+                                interrupts = <0 120 0x4>;
+                                gpio-controller;
+                                #gpio-cells = <2>;
+				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clock-names = "apb_pclk";
+                                interrupt-controller;
+                                #interrupt-cells = <2>;
+                                status = "disabled";
+                        };
+
+			gpio13: gpio@f8b2d000 {
+                                compatible = "arm,pl061", "arm,primecell";
+                                reg = <0xf8b2d000 0x1000>;
+                                interrupts = <0 121 0x4>;
+                                gpio-controller;
+                                #gpio-cells = <2>;
+				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clock-names = "apb_pclk";
+                                interrupt-controller;
+                                #interrupt-cells = <2>;
+                                status = "disabled";
+                        };
+
+			gpio14: gpio@f8b2e000 {
+                                compatible = "arm,pl061", "arm,primecell";
+                                reg = <0xf8b2e000 0x1000>;
+                                interrupts = <0 122 0x4>;
+                                gpio-controller;
+                                #gpio-cells = <2>;
+				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clock-names = "apb_pclk";
+                                interrupt-controller;
+                                #interrupt-cells = <2>;
+                                status = "disabled";
+                        };
+
+			gpio15: gpio@f8b2f000 {
+                                compatible = "arm,pl061", "arm,primecell";
+                                reg = <0xf8b2f000 0x1000>;
+                                interrupts = <0 123 0x4>;
+                                gpio-controller;
+                                #gpio-cells = <2>;
+				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clock-names = "apb_pclk";
+                                interrupt-controller;
+                                #interrupt-cells = <2>;
+                                status = "disabled";
+                        };
+
+			gpio16: gpio@f8b30000 {
+                                compatible = "arm,pl061", "arm,primecell";
+                                reg = <0xf8b30000 0x1000>;
+                                interrupts = <0 124 0x4>;
+                                gpio-controller;
+                                #gpio-cells = <2>;
+				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clock-names = "apb_pclk";
+                                interrupt-controller;
+                                #interrupt-cells = <2>;
+                                status = "disabled";
+                        };
+
+			gpio17: gpio@f8b31000 {
+                                compatible = "arm,pl061", "arm,primecell";
+                                reg = <0xf8b31000 0x1000>;
+                                interrupts = <0 125 0x4>;
+                                gpio-controller;
+                                #gpio-cells = <2>;
+				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clock-names = "apb_pclk";
+                                interrupt-controller;
+                                #interrupt-cells = <2>;
+                                status = "disabled";
+                        };
+
 		};
 
 		local_timer@f8a00600 {
