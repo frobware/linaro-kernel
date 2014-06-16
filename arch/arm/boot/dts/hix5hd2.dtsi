@@ -139,7 +139,7 @@
                                 interrupts = <0 108 0x4>;
                                 gpio-controller;
                                 #gpio-cells = <2>;
-				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clocks = <&clock HIX5HD2_FIXED_100M>;
 				clock-names = "apb_pclk";
                                 interrupt-controller;
                                 #interrupt-cells = <2>;
@@ -152,7 +152,7 @@
                                 interrupts = <0 109 0x4>;
                                 gpio-controller;
                                 #gpio-cells = <2>;
-				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clocks = <&clock HIX5HD2_FIXED_100M>;
 				clock-names = "apb_pclk";
                                 interrupt-controller;
                                 #interrupt-cells = <2>;
@@ -165,7 +165,7 @@
                                 interrupts = <0 110 0x4>;
                                 gpio-controller;
                                 #gpio-cells = <2>;
-				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clocks = <&clock HIX5HD2_FIXED_100M>;
 				clock-names = "apb_pclk";
                                 interrupt-controller;
                                 #interrupt-cells = <2>;
@@ -178,7 +178,7 @@
                                 interrupts = <0 111 0x4>;
                                 gpio-controller;
                                 #gpio-cells = <2>;
-				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clocks = <&clock HIX5HD2_FIXED_100M>;
 				clock-names = "apb_pclk";
                                 interrupt-controller;
                                 #interrupt-cells = <2>;
@@ -191,7 +191,7 @@
                                 interrupts = <0 112 0x4>;
                                 gpio-controller;
                                 #gpio-cells = <2>;
-				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clocks = <&clock HIX5HD2_FIXED_100M>;
 				clock-names = "apb_pclk";
                                 interrupt-controller;
                                 #interrupt-cells = <2>;
@@ -204,7 +204,7 @@
                                 interrupts = <0 113 0x4>;
                                 gpio-controller;
                                 #gpio-cells = <2>;
-				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clocks = <&clock HIX5HD2_FIXED_100M>;
 				clock-names = "apb_pclk";
                                 interrupt-controller;
                                 #interrupt-cells = <2>;
@@ -217,7 +217,7 @@
                                 interrupts = <0 114 0x4>;
                                 gpio-controller;
                                 #gpio-cells = <2>;
-				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clocks = <&clock HIX5HD2_FIXED_100M>;
 				clock-names = "apb_pclk";
                                 interrupt-controller;
                                 #interrupt-cells = <2>;
@@ -230,7 +230,7 @@
                                 interrupts = <0 115 0x4>;
                                 gpio-controller;
                                 #gpio-cells = <2>;
-				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clocks = <&clock HIX5HD2_FIXED_100M>;
 				clock-names = "apb_pclk";
                                 interrupt-controller;
                                 #interrupt-cells = <2>;
@@ -243,7 +243,7 @@
                                 interrupts = <0 116 0x4>;
                                 gpio-controller;
                                 #gpio-cells = <2>;
-				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clocks = <&clock HIX5HD2_FIXED_100M>;
 				clock-names = "apb_pclk";
                                 interrupt-controller;
                                 #interrupt-cells = <2>;
@@ -256,7 +256,7 @@
                                 interrupts = <0 117 0x4>;
                                 gpio-controller;
                                 #gpio-cells = <2>;
-				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clocks = <&clock HIX5HD2_FIXED_100M>;
 				clock-names = "apb_pclk";
                                 interrupt-controller;
                                 #interrupt-cells = <2>;
@@ -269,7 +269,7 @@
                                 interrupts = <0 118 0x4>;
                                 gpio-controller;
                                 #gpio-cells = <2>;
-				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clocks = <&clock HIX5HD2_FIXED_100M>;
 				clock-names = "apb_pclk";
                                 interrupt-controller;
                                 #interrupt-cells = <2>;
@@ -282,7 +282,7 @@
                                 interrupts = <0 119 0x4>;
                                 gpio-controller;
                                 #gpio-cells = <2>;
-				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clocks = <&clock HIX5HD2_FIXED_100M>;
 				clock-names = "apb_pclk";
                                 interrupt-controller;
                                 #interrupt-cells = <2>;
@@ -295,7 +295,7 @@
                                 interrupts = <0 120 0x4>;
                                 gpio-controller;
                                 #gpio-cells = <2>;
-				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clocks = <&clock HIX5HD2_FIXED_100M>;
 				clock-names = "apb_pclk";
                                 interrupt-controller;
                                 #interrupt-cells = <2>;
@@ -308,7 +308,7 @@
                                 interrupts = <0 121 0x4>;
                                 gpio-controller;
                                 #gpio-cells = <2>;
-				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clocks = <&clock HIX5HD2_FIXED_100M>;
 				clock-names = "apb_pclk";
                                 interrupt-controller;
                                 #interrupt-cells = <2>;
@@ -321,7 +321,7 @@
                                 interrupts = <0 122 0x4>;
                                 gpio-controller;
                                 #gpio-cells = <2>;
-				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clocks = <&clock HIX5HD2_FIXED_100M>;
 				clock-names = "apb_pclk";
                                 interrupt-controller;
                                 #interrupt-cells = <2>;
@@ -334,7 +334,7 @@
                                 interrupts = <0 123 0x4>;
                                 gpio-controller;
                                 #gpio-cells = <2>;
-				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clocks = <&clock HIX5HD2_FIXED_100M>;
 				clock-names = "apb_pclk";
                                 interrupt-controller;
                                 #interrupt-cells = <2>;
@@ -347,7 +347,7 @@
                                 interrupts = <0 124 0x4>;
                                 gpio-controller;
                                 #gpio-cells = <2>;
-				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clocks = <&clock HIX5HD2_FIXED_100M>;
 				clock-names = "apb_pclk";
                                 interrupt-controller;
                                 #interrupt-cells = <2>;
@@ -360,7 +360,7 @@
                                 interrupts = <0 125 0x4>;
                                 gpio-controller;
                                 #gpio-cells = <2>;
-				clocks = <&clock HIX5HD2_FIXED_24M>;
+				clocks = <&clock HIX5HD2_FIXED_100M>;
 				clock-names = "apb_pclk";
                                 interrupt-controller;
                                 #interrupt-cells = <2>;
