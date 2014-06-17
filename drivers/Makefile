@@ -152,5 +152,6 @@ obj-$(CONFIG_IIO)		+= iio/
 obj-$(CONFIG_VME_BUS)		+= vme/
 obj-$(CONFIG_IPACK_BUS)		+= ipack/
 obj-$(CONFIG_NTB)		+= ntb/
-
 obj-$(CONFIG_GATOR)		+= gator/
+
+obj-$(CONFIG_ARCH_HIX5HD2)		+= hisilicon/

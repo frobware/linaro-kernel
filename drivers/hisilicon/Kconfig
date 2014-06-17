@@ -1,0 +1,20 @@
+menu "HIX5HD2 Device Drivers"
+	depends on ARCH_HIX5HD2
+
+source "drivers/hisilicon/alsa/Kconfig"
+
+source "drivers/hisilicon/gpu/Kconfig"
+
+source "drivers/hisilicon/hdmi/Kconfig"
+
+source "drivers/hisilicon/hifb/Kconfig"
+
+source "drivers/hisilicon/omx/Kconfig"
+
+source "drivers/hisilicon/vfmw/Kconfig"
+
+source "drivers/hisilicon/vo/Kconfig"
+
+source "drivers/hisilicon/vpss/Kconfig"
+
+endmenu

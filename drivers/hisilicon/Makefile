@@ -1,0 +1,1 @@
+obj-${CONFIG_HI_FRAMEBUFFER_SUPPORT}	+= hifb/

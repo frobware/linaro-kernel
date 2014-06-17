@@ -1,4 +1,5 @@
 menu "Device Drivers"
+source "drivers/hisilicon/Kconfig"
 
 source "drivers/base/Kconfig"
 
