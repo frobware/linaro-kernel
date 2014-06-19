@@ -1,0 +1,7 @@
+
+config HI_VO_SUPPORT
+	tristate "Video Output Support"
+
+if HI_VO_SUPPORT
+	
+endif
