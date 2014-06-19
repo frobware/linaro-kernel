@@ -50,6 +50,7 @@ static int __INIT__ COMMON_DRV_ModInit(void)
     HI_S32 ret;
 
 #ifndef MODULE
+#if 0
     ret = DRV_PM_ModInit();
     if(HI_SUCCESS != ret)
     {
@@ -63,6 +64,7 @@ static int __INIT__ COMMON_DRV_ModInit(void)
         HI_ERR_SYS("DRV_MMZ_ModInit failed:%#x!\n", ret);
         goto ErrorExit_MMZ;
     }
+#endif    
 #endif
 
 #if !defined (HI_MCE_SUPPORT) && !defined(HI_KEYLED_CT1642_KERNEL_SUPPORT)

@@ -90,6 +90,34 @@ DT_MACHINE_START(HI3620, "Hisilicon Hi3620 (Flattened Device Tree)")
 MACHINE_END
 
 /* hix5hd2 series */
+#define HIX5HD2_IOCH1_VIRT (0xFD000000)
+#define HIX5HD2_IOCH1_PHYS (0xF8000000)
+#define HIX5HD2_IOCH1_SIZE  (0x2000000)
+
+static struct map_desc hix5hd2_io_desc[] __initdata = {
+        {
+                .virtual        = HIX5HD2_IOCH1_VIRT,
+                .pfn            = __phys_to_pfn(HIX5HD2_IOCH1_PHYS),
+                .length         = HIX5HD2_IOCH1_SIZE,
+                .type           = MT_DEVICE
+        },
+};
+
+static void __init hix5hd2_map_io(void)
+{
+        debug_ll_io_init();
+        iotable_init(hix5hd2_io_desc, ARRAY_SIZE(hix5hd2_io_desc));
+}
+
+extern void hisi_declare_heap_memory(void);
+
+static void hix5hd2_reserve(void)
+{
+#ifdef CONFIG_CMA
+//	hisi_declare_heap_memory();
+#endif	
+}
+
 static void hix5hd2_restart(char mode, const char *cmd)
 {
 	struct device_node *np;
@@ -122,9 +150,11 @@ static const char *hix5hd2_compat[] __initconst = {
 	NULL,
 };
 
-DT_MACHINE_START(HIX5HD2_DT, "Hisilicon X5HD2 (Flattened Device Tree)")
+DT_MACHINE_START(HIX5HD2_DT, "Hisilicon HIX5HD2 (Flattened Device Tree)")
+	.map_io		= hix5hd2_map_io,
 	.dt_compat	= hix5hd2_compat,
 	.smp		= smp_ops(hix5hd2_smp_ops),
+	.reserve	= hix5hd2_reserve,
 	.restart	= hix5hd2_restart,
 MACHINE_END
 

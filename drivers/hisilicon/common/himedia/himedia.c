@@ -411,12 +411,8 @@ HI_VOID DRV_PM_ModExit(HI_VOID)
 	return;
 }
 
-
-
-#ifdef MODULE
 module_init(DRV_PM_ModInit);
 module_exit(DRV_PM_ModExit);
-#endif
 
 EXPORT_SYMBOL(HI_DRV_PM_Register);
 EXPORT_SYMBOL(HI_DRV_PM_UnRegister);

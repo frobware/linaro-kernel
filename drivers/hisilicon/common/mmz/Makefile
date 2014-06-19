@@ -1,9 +1,6 @@
-ccflags-y := $(CFLAGS_CMN)
+ccflags-y := -I${src}/../include \
+	     -I${src}/../../include
 
-obj-y += drv_mmz_ext_k.o drv_mmz_intf.o
+obj-${CONFIG_HI_MMZ_SUPPORT} += hi_mmz.o 
+hi_mmz-y := drv_mmz_ext_k.o drv_mmz_intf.o drv_mmz_userdev.o drv_media_mem.o 
 
-ifeq ($(CFG_HI_MMZ_V2_SUPPORT),y)
-obj-y += drv_media_mem_v2.o
-else
-obj-y += drv_media_mem.o
-endif

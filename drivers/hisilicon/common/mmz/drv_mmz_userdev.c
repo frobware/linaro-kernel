@@ -770,11 +770,8 @@ void DRV_MMZ_ModExit(void)
 #endif
 }
 
-
-#ifdef MODULE
 module_init(DRV_MMZ_ModInit);
 module_exit(DRV_MMZ_ModExit);
-#endif
 
 EXPORT_SYMBOL(DRV_MMZ_ModInit);
 EXPORT_SYMBOL(DRV_MMZ_ModExit);

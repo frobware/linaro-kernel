@@ -68,11 +68,15 @@ typedef struct hiHIxxxx_SOC_S
 
 static HIxxxx_SOC_S s_stSocData;
 
-extern const char * get_sdkversion(void);
+//extern const char * get_sdkversion(void);
 
 HI_S32 SYS_GetBootVersion(HI_CHAR *pVersion,HI_U32 u32VersionLen)
 {
+#if 0
     const HI_U8* pu8BootVer = get_sdkversion();
+#else
+    const HI_U8* pu8BootVer = "none";
+#endif
 
     if (HI_NULL == pVersion || u32VersionLen == 0)
     {
@@ -127,7 +131,7 @@ static HI_S32 SYS_Ioctl(struct inode *pInode, struct file *pFile, HI_U32 cmd, HI
         case SYS_GET_SYS_VERSION :
             chiptype = (HI_SYS_VERSION_S*)arg;
             HI_DRV_SYS_GetChipVersion(&chiptype->enChipTypeHardWare, &chiptype->enChipVersion);
-            SYS_GetBootVersion(chiptype->BootVersion, sizeof(chiptype->BootVersion));
+	    SYS_GetBootVersion(chiptype->BootVersion, sizeof(chiptype->BootVersion));
             ret = HI_SUCCESS;
             break;
 

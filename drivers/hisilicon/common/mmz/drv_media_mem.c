@@ -36,7 +36,7 @@
 #include <asm/uaccess.h>
 #include <mach/hardware.h>
 #include <asm/io.h>
-#include <asm/system.h>
+//#include <asm/system.h>
 #include <linux/interrupt.h>
 #include <linux/ioport.h>
 #include <linux/spinlock.h>
@@ -591,7 +591,7 @@ static void __dma_remap(struct page *page, size_t size, pgprot_t prot)
 
 	apply_to_page_range(&init_mm, start, size, __dma_update_pte, &prot);
 	dsb();
-	hisi_flush_tlb_kernel_range(start, end);
+	flush_tlb_kernel_range(start, end);
 }
 
 static void __dma_clear_buffer(struct page *page, size_t size)

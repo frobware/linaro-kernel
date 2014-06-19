@@ -1,0 +1,12 @@
+
+config HI_BASE_SUPPORT
+	tristate "Base Support"
+	select HI_MMZ_SUPPORT
+	select HI_MEDIA_SUPPORT
+
+config HI_MMZ_SUPPORT
+	bool "MMZ Support"
+
+config HI_MEDIA_SUPPORT
+	bool "HiMedia Support"
+

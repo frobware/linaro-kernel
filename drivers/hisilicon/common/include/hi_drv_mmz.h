@@ -28,7 +28,7 @@
 #include <asm/uaccess.h>
 //#include <asm/hardware.h>
 #include <asm/io.h>
-#include <asm/system.h>
+//#include <asm/system.h>
 #include <linux/interrupt.h>
 #include <linux/ioport.h>
 #include <linux/string.h>
