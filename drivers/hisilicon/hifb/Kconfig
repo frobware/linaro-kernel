@@ -1,0 +1,50 @@
+
+config HI_FRAMEBUFFER_SUPPORT
+	tristate "Framebuffer Support"
+
+if HI_FRAMEBUFFER_SUPPORT
+config HIFB_CURSOR_SUPPORT
+	bool "Cursor in FB Support"
+        default n	
+
+config HIFB_COMPRESSION_SUPPORT
+	bool "Compression in FB Support"
+        default n
+
+config HIFB_SCROLLTEXT_SUPPORT
+	bool "Scrolltext in FB Support"
+        default n
+
+config HIFB_STEREO3D_SUPPORT
+	bool "Hardware Stereo3d Support"
+        default y
+
+config HI_HD0_FB_VRAM_SIZE
+	int "KB, HD0 FrameBuffer Size"
+        default 7200
+        help
+          For 1280*720, triple buffer, ARGB8888 format, the size is calculated as below:
+          (1280*720*4*2/1024)KB
+
+config HI_HD1_FB_VRAM_SIZE
+	int "KB, HD1 FrameBuffer Size"
+        default 7200
+        help
+          For 1280*720, triple buffer, ARGB8888 format, the size is calculated as below:
+          (1280*720*4*2/1024)KB
+
+config HI_HD2_FB_VRAM_SIZE
+	int "KB, HD0 FrameBuffer Size"
+        default 7200
+        help
+          For 1280*720, triple buffer, ARGB8888 format, the size is calculated as below:
+          (1280*720*4*2/1024)KB	
+
+config HI_SD0_FB_VRAM_SIZE
+	int "KB, SD0 FrameBuffer Size "
+        default 3240
+        help
+          For 720*576, triple buffer, ARGB8888 format, the size is calculated as below:
+          (720*576*4*2/1024)KB
+
+endif
