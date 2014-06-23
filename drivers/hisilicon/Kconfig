@@ -11,6 +11,10 @@ source "drivers/hisilicon/hdmi/Kconfig"
 
 source "drivers/hisilicon/hifb/Kconfig"
 
+source "drivers/hisilicon/pdm/Kconfig"
+
+source "drivers/hisilicon/pq/Kconfig"
+
 source "drivers/hisilicon/omx/Kconfig"
 
 source "drivers/hisilicon/vfmw/Kconfig"
