@@ -53,7 +53,7 @@ static HI_UNF_DISP_TIMING_S   g_stDispTiming =
     //.InRectHeight = 768,
 };
 #endif
-
+#if 0
 HI_CHAR *PDM_VmapByPhyaddr(HI_U32 phy_addr, HI_U32 size)
 {
     HI_U32 i;
@@ -1048,7 +1048,79 @@ HI_S32 DRV_PDM_ReleaseReserveMem(const HI_CHAR *BufName)
    
     return HI_SUCCESS;
 }
+#else
+HI_S32 DRV_PDM_GetDispParam(HI_UNF_DISP_E enDisp, HI_DISP_PARAM_S *pstDispParam)
+{
+	HI_S32  i;	
+	
+	for (i=0; i<HI_UNF_DISP_INTF_TYPE_BUTT; i++)
+	{
+	    pstDispParam->stIntf[i].enIntfType = HI_UNF_DISP_INTF_TYPE_BUTT;
+	}
 
+	if (HI_UNF_DISPLAY0 == enDisp)
+	{
+		pstDispParam->enSrcDisp = HI_UNF_DISPLAY1;
+		pstDispParam->stIntf[0].enIntfType = HI_UNF_DISP_INTF_TYPE_CVBS;
+		pstDispParam->stIntf[0].unIntf.stCVBS.u8Dac = 3;
+		pstDispParam->enFormat = HI_UNF_ENC_FMT_PAL;
+	}
+	else if (HI_UNF_DISPLAY1 == enDisp)
+	{
+		pstDispParam->stIntf[0].enIntfType = HI_UNF_DISP_INTF_TYPE_YPBPR;
+		pstDispParam->stIntf[0].unIntf.stYPbPr.u8DacY = 1;
+		pstDispParam->stIntf[0].unIntf.stYPbPr.u8DacPb= 2;
+		pstDispParam->stIntf[0].unIntf.stYPbPr.u8DacPr = 0;		
+		pstDispParam->stIntf[1].enIntfType = HI_UNF_DISP_INTF_TYPE_HDMI;
+		pstDispParam->stIntf[1].unIntf.enHdmi = HI_UNF_HDMI_ID_0;
+		pstDispParam->enFormat = HI_UNF_ENC_FMT_1080i_50;		
+	}
+
+	pstDispParam->bGammaEnable = HI_FALSE;
+	pstDispParam->enPixelFormat = HIGO_PF_8888;
+	pstDispParam->stAspectRatio.enDispAspectRatio = HI_UNF_DISP_ASPECT_RATIO_AUTO;
+	pstDispParam->u32Brightness = 50;
+	pstDispParam->u32Contrast = 50;
+	pstDispParam->u32HuePlus = 50;	
+	pstDispParam->u32Saturation = 50;
+	pstDispParam->stBgColor.u8Red = 0;
+	pstDispParam->stBgColor.u8Green = 255;
+	pstDispParam->stBgColor.u8Blue = 0;
+	
+	return HI_SUCCESS;
+}
+
+HI_S32 DRV_PDM_GetMceParam(HI_MCE_PARAM_S *pMceParam)
+{
+	printk("===%s====\n",__FUNCTION__);
+	return HI_SUCCESS;
+}
+
+HI_S32 DRV_PDM_GetMceData(HI_U32 u32Size, HI_U32 *pAddr)
+{
+	printk("===%s====\n",__FUNCTION__);
+	return HI_SUCCESS;	
+}
+
+HI_S32 DRV_PDM_ReleaseReserveMem(const HI_CHAR *BufName)
+{
+	printk("===%s====\n",__FUNCTION__);
+	return HI_SUCCESS;
+}
+
+HI_S32 DRV_PDM_GetData(const HI_CHAR *BufName, HI_U32 *pu32DataAddr, HI_U32 *pu32DataLen)
+{
+	printk("===%s====\n",__FUNCTION__);
+	return HI_SUCCESS;
+}
+
+HI_S32 DRV_PDM_GetSoundParam(HI_UNF_SND_E enSound, HI_UNF_PDM_SOUND_PARAM_S *pstSoundParam)
+{
+	printk("===%s====\n",__FUNCTION__);
+	return HI_SUCCESS;
+}
+
+#endif
 
 HI_S32 HI_DRV_PDM_GetDispParam(HI_UNF_DISP_E enDisp, HI_DISP_PARAM_S *pstDispParam)
 {

@@ -1,5 +1,4 @@
 #include <linux/kernel.h>
-#include <mach/hardware.h>
 #include <asm/io.h>
 
 #include "hi_module.h"
@@ -440,6 +439,7 @@ static PM_BASEOPS_S g_PdmDrvOps = {
     .resume       = PDM_Resume,
 };
 
+#if 0
 /*******************************************
 tag format is version=1.0.0.0  fb=0x85000000,0x10000  baseparam=0x86000000,0x2000 бнбн
 *******************************************/
@@ -511,7 +511,7 @@ HI_S32 PDM_GetTagBuf(HI_VOID)
 
     return HI_SUCCESS;
 }
-
+#endif
 
 HI_S32 HI_DRV_PDM_Init(HI_VOID)
 {
@@ -527,13 +527,13 @@ HI_S32 HI_DRV_PDM_Init(HI_VOID)
     memset(&g_PdmGlobal, 0x0, sizeof(PDM_GLOBAL_S));
 
     HI_INIT_MUTEX(&g_PdmGlobal.PdmMutex);
-
+#if 0
     ret = PDM_GetTagBuf();
     if (HI_SUCCESS != ret)
     {
         memset(g_PdmGlobal.stBufInfo, 0x0, sizeof(PDM_BUF_INFO_S)*PDM_MAX_BUF_NUM);
     }
-    
+#endif    
     return ret;
 }
 
