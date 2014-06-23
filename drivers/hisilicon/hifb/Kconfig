@@ -1,5 +1,5 @@
 
-config HI_FRAMEBUFFER_SUPPORT
+menuconfig HI_FRAMEBUFFER_SUPPORT
 	tristate "Framebuffer Support"
 
 if HI_FRAMEBUFFER_SUPPORT
@@ -46,5 +46,4 @@ config HI_SD0_FB_VRAM_SIZE
         help
           For 720*576, triple buffer, ARGB8888 format, the size is calculated as below:
           (720*576*4*2/1024)KB
-
 endif
