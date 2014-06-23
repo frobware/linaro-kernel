@@ -1,7 +1,34 @@
+menuconfig HI_VDP_SUPPORT
+	tristate  "Video Display Support"
+	default m
 
-config HI_VO_SUPPORT
-	tristate "Video Output Support"
+if HI_VDP_SUPPORT
+choice
+        prompt "Video Buffer Type"
+        default HI_VIDEO_BUFF_DEMO
+config  HI_VIDEO_BUFF_DEMO
+        bool "FMS6141 + FMS6363"
+config  HI_VIDEO_BUFF_TYPE0
+        bool "FMS6143a + FMS6363"
+endchoice
 
-if HI_VO_SUPPORT
-	
+config  HI_DISP_USE_QPLL_SOLELY
+        bool "QPLL Be Used By Display Solely"
+        help
+          If you select true, QPLL should be used by Display solely.
+          As a result display can suppport dobuble HD output with different pixel clock.
+        default n
+
+config  HI_DISP_TTX_INBUFFERSIZE
+        hex "TTX Input Buffer Size"
+        help
+          You can adjust teletext input buffer size if you need.
+        default 0x4000
+
+config  HI_DISP_CC_INBUFFERSIZE
+        hex "SD CC Input Buffer Size"
+        help
+          You can adjust Closed Caption input buffer size if you need.
+        default 0x4000
+
 endif

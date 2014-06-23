@@ -71,8 +71,8 @@ History       :
 #include <linux/time.h>
 #include <linux/unistd.h>
 #include <linux/delay.h>
-#include <mach/hardware.h>
 */
+#include <mach/hardware.h>
 
 
 #elif defined(__DISP_PLATFORM_VC__)

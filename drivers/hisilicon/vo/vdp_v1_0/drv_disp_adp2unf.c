@@ -18,7 +18,7 @@
 #include "hi_unf_disp.h"
 #include "hi_drv_video.h"
 #include "hi_drv_disp.h"
-#include "mpi_disp_tran.h"
+//#include "mpi_disp_tran.h"
 
 #include "hi_drv_pdm.h"
 #include "drv_pdm_ext.h"
