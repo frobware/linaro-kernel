@@ -12,7 +12,7 @@
 #include "si_typedefs.h"
 #include "si_defsmddc.h"
 #include "si_hdmitx.h"
-#include "drv_reg_proc.h"
+//#include "drv_reg_proc.h"
 
 #define MDDCWriteOffset(SGM_OFFSET)  WriteByteHDMITXP0(MDDC_SEGMENT_ADDR, SGM_OFFSET)
 #define MDDCCommand( CMD ) WriteByteHDMITXP0(MDDC_COMMAND_ADDR, CMD)

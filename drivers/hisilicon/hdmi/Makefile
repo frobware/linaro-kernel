@@ -1,81 +1,6 @@
-#===============================================================================
-# export variables
-#===============================================================================
-ifeq ($(CFG_HI_EXPORT_FLAG),)
-    ifneq ($(KERNELRELEASE),)
-    KERNEL_DIR := $(srctree)
+obj-${CONFIG_HI_HDMI_SUPPORT} += hi_hdmi.o
 
-    SDK_DIR := $(KERNEL_DIR)/../../..
-    else
-    SDK_DIR := $(CURDIR)/../../../..
-    endif
-
-include $(SDK_DIR)/base.mak
-endif
-
-#===============================================================================
-# local variables
-#===============================================================================
-EXTRA_CFLAGS += -I$(COMMON_UNF_INCLUDE)                 \
-                -I$(COMMON_API_INCLUDE)                 \
-                -I$(COMMON_DRV_INCLUDE)                 \
-                -I$(MSP_UNF_INCLUDE)                    \
-                -I$(MSP_API_INCLUDE)                    \
-                -I$(MSP_DRV_INCLUDE)                    \
-                -I$(MSP_DIR)/api/hdmi                   \
-                -I$(MSP_DIR)/drv/hdmi                   \
-                -I$(MSP_DIR)/drv/hdmi/hdmi_drv          \
-                -I$(MSP_DIR)/api/sio
-
-KBUILD_EXTRA_SYMBOLS += $(COMMON_DIR)/drv/Module.symvers
-
-EXTRA_CFLAGS += $(CFG_HI_KMOD_CFLAGS)
-
-#ifeq ($(CFG_HI_HDMI_SUPPORT_FPGA), y)
-#EXTRA_CFLAGS += -DSUPPORT_FPGA
-#endif
-
-#S40v2 Don't support DVI
-EXTRA_CFLAGS += -DDVI_SUPPORT
-
-#ifeq ($(CFG_HI_BUILD_WITH_ANDROID), y)
-#EXTRA_CFLAGS += -DANDROID_SUPPORT
-#endif
-
-
-ifeq ($(CFG_PRODUCT_TYPE), android)
-EXTRA_CFLAGS += -DANDROID_SUPPORT
-endif
-
-ifeq ($(CFG_HI_HDMI_SUPPORT_DVI), y)
-EXTRA_CFLAGS += -DDVI_SUPPORT
-endif
-
-ifeq ($(CFG_HI_HDMI_SUPPORT_HDCP), y)
-EXTRA_CFLAGS += -DHDCP_SUPPORT
-endif
-
-ifeq ($(CFG_HI_HDMI_SUPPORT_3D), y)
-EXTRA_CFLAGS += -DSUPPORT_3D
-endif
-
-ifeq ($(CFG_HI_HDMI_SUPPORT_CEC), y)
-EXTRA_CFLAGS += -DCEC_SUPPORT
-endif
-
-ifneq ($(CFG_HI_CHIP_TYPE),hi3712)
-EXTRA_CFLAGS += -DDEBUG_SUPPORT
-endif
-
-MOD_NAME := hi_hdmi
-
-ifeq ($(CFG_HI_MSP_BUILDIN), y)
-obj-y += $(MOD_NAME).o
-else
-obj-m += $(MOD_NAME).o
-endif
-
-$(MOD_NAME)-y   :=  hdmi_intf_k.o                      \
+hi_hdmi-y   :=  hdmi_intf_k.o                      \
 		hdmi_intf.o				     \
 		drv_hdmi.o                         \
 		drv_global.o			   \
@@ -108,27 +33,5 @@ $(MOD_NAME)-y   :=  hdmi_intf_k.o                      \
 		hdmi_drv/si_vmtables.o             \
 		hdmi_drv/si_phy.o
 
-#===============================================================================
-#   rules
-#===============================================================================
-.PHONY: all clean install uninstall
-
-all:
-	$(AT)make -C $(LINUX_DIR) ARCH=arm CROSS_COMPILE=$(CFG_HI_TOOLCHAINS_NAME)- M=$(CURDIR) modules
-
-clean:
-	$(AT)make -C $(LINUX_DIR) M=$(CURDIR) clean
-	$(AT)rm -rf  *.o
-	$(AT)rm -rf  .*.o.cmd
-	$(AT)rm -rf .tmp_versions
-	$(AT)rm -rf  Module.symvers
-	$(AT)rm -rf  modules.order
-
-install: all
-ifneq ($(CFG_MSP_BUILDTYPE),y)
-	$(AT)cp -f $(CURDIR)/$(MOD_NAME).ko $(MODULE_DIR)/
-endif
-
-uninstall:
-	$(AT)rm -rf $(MODULE_DIR)/$(MOD_NAME).ko
-
+ccflags-y := -I${HISILICON_INCLUDE} -I${HISILICON_COMMON_INCLUDE}
+ccflags-y += -I${src} -I${src}/hdmi_drv

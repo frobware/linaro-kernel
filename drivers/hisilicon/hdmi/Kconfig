@@ -1,0 +1,18 @@
+
+menuconfig HI_HDMI_SUPPORT
+	tristate "HDMI Support"
+	default m
+
+if HI_HDMI_SUPPORT
+config  HI_HDMI_SUPPORT_HDCP
+        bool "HDCP Support"
+        help
+          If you want to enable HDCP, say y.
+        default n
+
+config  HI_HDMI_SUPPORT_CEC
+        bool "CEC Support"
+        help
+          If you want to enable CEC, say y.
+        default n
+endif
