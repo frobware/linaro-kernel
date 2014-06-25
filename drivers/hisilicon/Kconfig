@@ -3,7 +3,7 @@ menu "HIX5HD2 Device Drivers"
 
 source "drivers/hisilicon/common/Kconfig"
 
-source "drivers/hisilicon/alsa/Kconfig"
+source "drivers/hisilicon/aiao/Kconfig"
 
 source "drivers/hisilicon/gpu/Kconfig"
 

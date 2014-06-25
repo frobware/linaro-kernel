@@ -1,0 +1,37 @@
+menuconfig HI_AIAO_SUPPORT
+	tristate  "Audio Input/Output Support"
+	default m
+
+if HI_AIAO_SUPPORT
+config	HI_SND_ALSA_AO_SUPPORT
+	bool "AO ALSA Support"
+	default n 
+
+config HI_AI_SUPPORT
+	bool "AI Support"
+	default n 
+
+config	HI_SND_ALSA_AI_SUPPORT
+	depends on HI_AI_SUPPORT
+	bool "AI ALSA Support"
+	default n 
+
+config	HI_SND_ALSA_I2S_ONLY_SUPPORT
+	depends on HI_SND_ALSA_AI_SUPPORT
+	bool "ALSA I2S only Card Support"
+	default n 
+
+config	HI_SND_ALSA_HDMI_ONLY_SUPPORT
+	depends on HI_SND_ALSA_AI_SUPPORT
+	bool "ALSA HDMI only Card Support"
+	default n 
+
+config HI_SND_CAST_SUPPORT
+	bool "AO Cast Support"
+	default y
+
+config HI_SND_VIRTUALCHN_SUPPORT
+	bool "SND Virtual Channel Support"
+	default n
+
+endif
