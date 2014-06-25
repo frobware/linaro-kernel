@@ -33,5 +33,4 @@ hi_hdmi-y   :=  hdmi_intf_k.o                      \
 		hdmi_drv/si_vmtables.o             \
 		hdmi_drv/si_phy.o
 
-ccflags-y := -I${HISILICON_INCLUDE} -I${HISILICON_COMMON_INCLUDE}
 ccflags-y += -I${src} -I${src}/hdmi_drv
