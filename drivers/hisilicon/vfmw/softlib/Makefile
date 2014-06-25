@@ -75,26 +75,3 @@ ifneq ($(CFG_MSP_BUILDTYPE), y)
 hi_svdec-y += hwmedia.o
 endif
 
-# 3. dependence to VFMW
-#hi_svdec-y += ../mem_manage.o
-#hi_svdec-y += ../public.o
-#hi_svdec-y += ../../../drv/linux_kernel/li_klib.o
-
-all:
-	make -C $(HWMEDIA_DIR)
-	cp $(SDEC_KO_DIR)/hwmedia_v1.1/hwmedia.o $(SDEC_KO_DIR)/hwmedia.o
-	make -C $(LINUXROOT) M=$(SDEC_KO_DIR) modules
-
-clean:
-	make -C $(HWMEDIA_DIR) clean
-	make -C $(LINUXROOT) M=$(SDEC_KO_DIR) clean
-	rm -rf *.o
-	rm -rf *.cmd
-	rm -rf *.mod*
-	rm -rf *.ko
-
-install: all
-	$(AT)cp -f $(MOD_NAME).ko $(MODULE_DIR)/
-
-uninstall:
-	$(AT)rm -rf $(MODULE_DIR)/$(MOD_NAME).ko

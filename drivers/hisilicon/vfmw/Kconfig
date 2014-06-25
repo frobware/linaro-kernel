@@ -1,0 +1,8 @@
+
+menuconfig HI_VFMW_SUPPORT
+	tristate "Video Decoder Support"
+	default m
+
+if HI_VFMW_SUPPORT
+	
+endif

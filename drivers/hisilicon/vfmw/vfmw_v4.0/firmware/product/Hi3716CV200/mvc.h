@@ -60,7 +60,7 @@ extern "C" {
 #include <asm/uaccess.h>
 #include <asm/io.h>
 #include <asm/ioctl.h>
-#include <asm/system.h>
+//#include <asm/system.h>
 #endif
 #include "basedef.h"
 #include "vfmw.h"

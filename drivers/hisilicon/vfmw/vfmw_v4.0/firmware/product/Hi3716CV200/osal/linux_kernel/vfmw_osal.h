@@ -70,7 +70,7 @@
 #include <asm/uaccess.h>
 #include <asm/io.h>
 #include <asm/ioctl.h>
-#include <asm/system.h>
+//#include <asm/system.h>
 //#ifdef __LINUX_2_6_31__
 #include <linux/semaphore.h>
 //#include "hi_mmz.h"
