@@ -1,5 +1,6 @@
 #include "vpss_reg_cv200.h"
 #include "vpss_common.h"
+#include "mach/hardware.h"
 #ifdef __cplusplus
 #if __cplusplus
 extern "C"{

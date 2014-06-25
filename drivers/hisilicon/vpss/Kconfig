@@ -1,0 +1,12 @@
+
+menuconfig HI_VPSS_SUPPORT
+	tristate "Video Process System Support"
+	default m
+
+if HI_VPSS_SUPPORT
+
+config  HI_VPSS_MAX_BUFFER_NUMB
+        int "Vpss Port OutBuffer Max  Number(6~20)"
+        range 6 20
+        default 10
+endif
