@@ -1,2 +1,2 @@
-obj-$(CONFIG_HI_GPU) += mali/
+obj-$(CONFIG_HI_GPU_SUPPORT) += mali/
 
