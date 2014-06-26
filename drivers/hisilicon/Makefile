@@ -19,3 +19,4 @@ obj-${CONFIG_HI_FRAMEBUFFER_SUPPORT}	+= hifb/
 obj-${CONFIG_HI_VPSS_SUPPORT}		+= vpss/
 obj-${CONFIG_HI_VFMW_SUPPORT}		+= vfmw/
 obj-${CONFIG_HI_OMX_SUPPORT}		+= omx/
+obj-${CONFIG_HI_GPU_SUPPORT}		+= gpu/

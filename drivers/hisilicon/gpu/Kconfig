@@ -1,0 +1,32 @@
+
+menuconfig HI_GPU_SUPPORT
+	tristate "GPU Support"
+	default m
+
+if HI_GPU_SUPPORT
+config HI_GPU_DEBUG
+        bool "Enable debug in Mali driver"
+        ---help---
+          This enabled extra debug checks and messages in the Mali driver.
+
+config HI_GPU_PROFILING
+        bool "Enable Mali profiling"
+        default y
+        ---help---
+          This enables gator profiling of Mali GPU events.
+
+config HI_GPU_INTERNAL_PROFILING
+        bool "Enable internal Mali profiling API"
+        depends on HI_GPU_PROFILING
+        default n
+        ---help---
+          This enables the internal legacy Mali profiling API.
+
+
+config HI_GPU_MAX_SHARE_MEM_SIZE
+        hex "Mali400 and OS maximal shared memory size"
+        default "0x10000000"
+        ---help---
+          This constricts the maximal memory GPU could get from os memory.
+
+endif
