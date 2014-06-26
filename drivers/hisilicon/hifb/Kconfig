@@ -1,6 +1,7 @@
 
 menuconfig HI_FRAMEBUFFER_SUPPORT
 	tristate "Framebuffer Support"
+	default m
 
 if HI_FRAMEBUFFER_SUPPORT
 config HIFB_CURSOR_SUPPORT

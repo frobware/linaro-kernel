@@ -5,16 +5,16 @@ menuconfig HI_AIAO_SUPPORT
 if HI_AIAO_SUPPORT
 config	HI_SND_ALSA_AO_SUPPORT
 	bool "AO ALSA Support"
-	default n 
+	default y 
 
 config HI_AI_SUPPORT
 	bool "AI Support"
-	default n 
+	default y 
 
 config	HI_SND_ALSA_AI_SUPPORT
 	depends on HI_AI_SUPPORT
 	bool "AI ALSA Support"
-	default n 
+	default y 
 
 config	HI_SND_ALSA_I2S_ONLY_SUPPORT
 	depends on HI_SND_ALSA_AI_SUPPORT
