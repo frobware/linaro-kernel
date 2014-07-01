@@ -1052,6 +1052,11 @@ HI_S32 DRV_PDM_ReleaseReserveMem(const HI_CHAR *BufName)
 HI_S32 DRV_PDM_GetDispParam(HI_UNF_DISP_E enDisp, HI_DISP_PARAM_S *pstDispParam)
 {
 	HI_S32  i;	
+
+	pstDispParam->enSrcDisp = HI_UNF_DISPLAY_BUTT;
+	pstDispParam->u32VirtScreenWidth = 1280;
+	pstDispParam->u32VirtScreenHeight = 720;	
+	memset(&(pstDispParam->stOffsetInfo),0,sizeof(HI_UNF_DISP_OFFSET_S));
 	
 	for (i=0; i<HI_UNF_DISP_INTF_TYPE_BUTT; i++)
 	{
