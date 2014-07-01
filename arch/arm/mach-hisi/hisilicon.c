@@ -109,15 +109,6 @@ static void __init hix5hd2_map_io(void)
         iotable_init(hix5hd2_io_desc, ARRAY_SIZE(hix5hd2_io_desc));
 }
 
-extern void hisi_declare_heap_memory(void);
-
-static void hix5hd2_reserve(void)
-{
-#ifdef CONFIG_CMA
-//	hisi_declare_heap_memory();
-#endif	
-}
-
 static void hix5hd2_restart(char mode, const char *cmd)
 {
 	struct device_node *np;
@@ -154,7 +145,6 @@ DT_MACHINE_START(HIX5HD2_DT, "Hisilicon HIX5HD2 (Flattened Device Tree)")
 	.map_io		= hix5hd2_map_io,
 	.dt_compat	= hix5hd2_compat,
 	.smp		= smp_ops(hix5hd2_smp_ops),
-	.reserve	= hix5hd2_reserve,
 	.restart	= hix5hd2_restart,
 MACHINE_END
 

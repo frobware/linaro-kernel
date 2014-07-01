@@ -957,6 +957,7 @@ hil_mmz_t *hil_mmz_find(unsigned long gfp, const char *mmz_name)
  */
 static int media_mem_parse_cmdline(char *s)
 {
+#if 0
     hil_mmz_t *zone = NULL;
     char *line;
     struct cma_zone * cma_zone;
@@ -1039,14 +1040,33 @@ static int media_mem_parse_cmdline(char *s)
 
         zone = NULL;
     }
+#else
+    	hil_mmz_t *zone = NULL;
+	struct cma *cma_area;
 
+	cma_area = dev_get_cma_area(NULL);
+	if(!cma_area) 		
+		return -1;
+	
+        zone = hil_mmz_create("null", 0, 0, 0);
+	if(!zone)
+		return -1;
+        strlcpy(zone->name,"ddr", HIL_MMZ_NAME_LEN);
+	zone->gfp = 0;
+	zone->phys_start = cma_area->base_pfn << PAGE_SHIFT;
+	zone->nbytes = cma_area->count << PAGE_SHIFT;
+	zone->cma_dev = NULL;
+	hil_mmz_register(zone);
+#endif
     return 0;
 }
 
+#if 0
 int get_mmz_info_phys_start(void)
 {
     return mmz_info_phys_start;
 }
+#endif
 
 #define MAX_MMZ_INFO_LEN 20*1024
 
