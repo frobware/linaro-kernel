@@ -16,7 +16,7 @@ export EXTRA_DEFINES += -I$(COMMON_UNF_INCLUDE) -I$(COMMON_DRV_INCLUDE) -I$(MSP_
 endif
 
 # Max GPU and OS shared memory size
-export EXTRA_DEFINES += -DCONFIG_GPU_MAX_SHARE_MEM_SIZE=$(CFG_HI_GPU_MAX_SHARE_MEM_SIZE)
+export EXTRA_DEFINES += -DCONFIG_GPU_MAX_SHARE_MEM_SIZE=$(CONFIG_HI_GPU_MAX_SHARE_MEM_SIZE)
 
 # Enable DMA Buffer map on attach
 export CONFIG_MALI_DMA_BUF_MAP_ON_ATTACH=y
@@ -49,8 +49,6 @@ export EXTRA_DEFINES += -DHI_DONGLE_MODE_CRITICAL
 endif
 
 #if buildin, we should enable share interrupt and FAKE Driver here
-ifeq ($(CONFIG_HI_GPU_SUPPORT),y)
-
 export CONFIG_MALI_SHARED_INTERRUPTS=y
 export EXTRA_DEFINES += -DCONFIG_MALI_SHARED_INTERRUPTS
 
@@ -61,7 +59,6 @@ export MALI_PLATFORM_FILES = platform/$(TARGET_PLATFORM)/s40v200.c \
                             platform/$(TARGET_PLATFORM)/s40v200_core_scaling.c \
                             platform/$(TARGET_PLATFORM)/s40v200_pmu.c \
                             platform/$(TARGET_PLATFORM)/s40v200_gpu_proc.c
-endif
 
 #debug or release
 ifeq ($(CONFIG_HI_GPU_DEBUG),y)

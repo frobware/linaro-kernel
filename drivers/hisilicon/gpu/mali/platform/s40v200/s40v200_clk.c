@@ -529,7 +529,7 @@ static inline void clk_gpu_initial(void)
 
 void __init gpu_init_clocks(void)
 {
-    clk_init(&clk_gpu);
+    //clk_init(&clk_gpu);
 
     s_hisi_pmc = hisi_pmu_get();
     s_hisi_crg = hisi_crg_get();
