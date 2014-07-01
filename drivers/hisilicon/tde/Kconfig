@@ -1,0 +1,8 @@
+
+menuconfig HI_TDE_SUPPORT
+	tristate "TDE Support"
+	default m
+
+if HI_TDE_SUPPORT
+
+endif
