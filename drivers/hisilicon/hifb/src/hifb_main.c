@@ -6128,8 +6128,6 @@ HI_VOID HIFB_DRV_ModExit(HI_VOID)
 
 }
 
-#ifdef MODULE
 module_init(HIFB_DRV_ModInit);
 module_exit(HIFB_DRV_ModExit);
 MODULE_LICENSE("GPL");
-#endif

@@ -592,10 +592,8 @@ HI_VOID PDM_DRV_ModExit(HI_VOID)
     return;
 }
 
-#ifdef MODULE
 module_init(PDM_DRV_ModInit);
 module_exit(PDM_DRV_ModExit);
-#endif
 
 MODULE_AUTHOR("HISILICON");
 MODULE_LICENSE("GPL");

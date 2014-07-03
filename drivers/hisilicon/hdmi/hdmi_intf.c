@@ -2168,10 +2168,8 @@ void HDMI_DRV_ModExit(void)
     return;
 }
 
-#ifdef MODULE
 module_init(HDMI_DRV_ModInit);
 module_exit(HDMI_DRV_ModExit);
-#endif
 MODULE_LICENSE("GPL");
 
 

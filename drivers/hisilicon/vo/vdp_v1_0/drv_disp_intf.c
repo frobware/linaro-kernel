@@ -182,13 +182,8 @@ HI_VOID VDP_DRV_ModExit(HI_VOID)
     return;
 }
 
-#ifdef MODULE
 module_init(VDP_DRV_ModInit);
 module_exit(VDP_DRV_ModExit);
-#else
-EXPORT_SYMBOL(VDP_DRV_ModInit);
-EXPORT_SYMBOL(VDP_DRV_ModExit);
-#endif
 
 MODULE_AUTHOR("HISILICON");
 MODULE_LICENSE("GPL");

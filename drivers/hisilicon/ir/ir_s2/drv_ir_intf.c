@@ -1352,10 +1352,8 @@ void IR_DRV_ModExit(void)
     platform_device_unregister(&ir_platform_device);
 }
 
-#ifdef MODULE
 module_init(IR_DRV_ModInit);
 module_exit(IR_DRV_ModExit);
-#endif
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("HISILION");

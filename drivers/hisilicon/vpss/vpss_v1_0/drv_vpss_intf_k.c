@@ -738,10 +738,8 @@ HI_S32 HI_DRV_VPSS_UpdatePqData(HI_U32 u32UpdateType, PQ_PARAM_S* pstPqParam)
 }
 
 
-#ifdef MODULE
 module_init(VPSS_DRV_ModInit);
 module_exit(VPSS_DRV_ModExit);
-#endif
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("HISILICON");

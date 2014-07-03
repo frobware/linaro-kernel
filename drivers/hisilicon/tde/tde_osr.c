@@ -82,10 +82,8 @@ HI_VOID  TDE_DRV_ModExit(HI_VOID)
     HI_GFX_PM_UnRegister();
 }
 
-#ifdef MODULE
 module_init(TDE_DRV_ModInit);
 module_exit(TDE_DRV_ModExit);
-#endif
 
 #ifndef HI_ADVCA_FUNCTION_RELEASE
 MODULE_AUTHOR("Digital Media Team, Hisilicon crop.");

@@ -985,10 +985,8 @@ HI_VOID OMXVDEC_DRV_ModExit(HI_VOID)
 }
 
 
-#ifdef MODULE
 module_init(OMXVDEC_DRV_ModInit);
 module_exit(OMXVDEC_DRV_ModExit);
-#endif
 
 
 

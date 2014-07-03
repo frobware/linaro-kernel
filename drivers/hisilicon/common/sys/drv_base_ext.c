@@ -210,11 +210,9 @@ static HI_VOID COMMON_DRV_ModExit (HI_VOID)
 }
 #endif
 
-#ifdef MODULE
 module_init(COMMON_DRV_ModInit);
+#ifdef MODULE
 module_exit(COMMON_DRV_ModExit);
-#else
-device_initcall(COMMON_DRV_ModInit);
 #endif
 
 MODULE_AUTHOR("HISILION");

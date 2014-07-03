@@ -129,11 +129,8 @@ HI_VOID PQ_DRV_ModExit(HI_VOID)
     return;
 }
 
-#ifdef MODULE
 module_init(PQ_DRV_ModInit);
 module_exit(PQ_DRV_ModExit);
-
-#endif
 
 
 MODULE_AUTHOR("HISILICON");

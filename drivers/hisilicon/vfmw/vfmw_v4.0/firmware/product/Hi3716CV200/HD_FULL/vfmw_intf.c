@@ -102,10 +102,8 @@ HI_VOID VFMW_DRV_ModExit(void)
     return ;
 }
 
-#ifdef MODULE
 module_init(VFMW_DRV_ModInit);
 module_exit(VFMW_DRV_ModExit);
-#endif
 
 MODULE_AUTHOR("HISILICON");
 MODULE_LICENSE("GPL");
