@@ -1,7 +1,7 @@
 MOD_NAME := hi_ir
 
 
-obj-m += $(MOD_NAME).o
+obj-${CONFIG_HI_IR_SUPPORT} += $(MOD_NAME).o
 
 $(MOD_NAME)-y   :=  drv_ir_intf.o
 

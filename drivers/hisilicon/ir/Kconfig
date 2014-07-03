@@ -1,0 +1,8 @@
+
+menuconfig HI_IR_SUPPORT
+	tristate "IR Support"
+	default m
+
+if HI_IR_SUPPORT
+
+endif

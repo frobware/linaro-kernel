@@ -25,4 +25,6 @@ source "drivers/hisilicon/vo/Kconfig"
 
 source "drivers/hisilicon/vpss/Kconfig"
 
+source "drivers/hisilicon/ir/Kconfig"
+
 endmenu
