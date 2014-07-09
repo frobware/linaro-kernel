@@ -62,6 +62,9 @@
 #define HIX5HD2_SD_CIU_RST		138
 #define HIX5HD2_WDG0_CLK        139
 #define HIX5HD2_WDG0_RST        140
+#define HIX5HD2_IR_CLK          141
+#define HIX5HD2_IR_RST          142
+
 
 
 /* complex */
