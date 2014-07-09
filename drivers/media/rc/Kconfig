@@ -343,4 +343,16 @@ config RC_ST
 
 	 If you're not sure, select N here.
 
+config IR_HISILICON
+	tristate "Hisilicon IR remote control"
+	depends on RC_CORE
+	help
+	 Say Y here if you want to use hisilicon remote control.
+	 The driver passes raw pulse and space information to the LIRC decoder.
+	 To compile this driver as a module, choose M here: the module will be
+	 called hisi_ir.
+
+	 If you're not sure, select N here
+
+
 endif #RC_DEVICES
