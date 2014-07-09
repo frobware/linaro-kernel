@@ -476,5 +476,12 @@
 			compatible = "hisilicon,cpuctrl";
 			reg = <0xf8a22000 0x2000>;
 		};
+
+		ir: ir@f8001000 {
+			compatible = "hisilicon,hix5hd2-ir";
+			reg = <0xf8001000 0x1000>;
+			interrupts = <0 47 4>;
+			clocks = <&clock  HIX5HD2_IR_RST>;
+        	};
 	};
 };
