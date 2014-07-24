@@ -64,8 +64,19 @@
 #define HIX5HD2_WDG0_RST        140
 #define HIX5HD2_IR_CLK          141
 #define HIX5HD2_IR_RST          142
-
-
+/* I2C CLK */
+#define HIX5HD2_I2C0_CLK		143
+#define HIX5HD2_I2C0_RST		144
+#define HIX5HD2_I2C1_CLK		145
+#define HIX5HD2_I2C1_RST		146
+#define HIX5HD2_I2C2_CLK		147
+#define HIX5HD2_I2C2_RST		148
+#define HIX5HD2_I2C3_CLK		149
+#define HIX5HD2_I2C3_RST		150
+#define HIX5HD2_I2C4_CLK		151
+#define HIX5HD2_I2C4_RST		152
+#define HIX5HD2_I2C5_CLK		153
+#define HIX5HD2_I2C5_RST		154
 
 /* complex */
 #define HIX5HD2_MAC0_CLK		192
