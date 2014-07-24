@@ -20,6 +20,22 @@ config I2C_ALI1535
 	  This driver can also be built as a module.  If so, the module
 	  will be called i2c-ali1535.
 
+config I2C_HIX5HD2
+	tristate "Hix5hd2 high-speed I2C driver"
+	help
+	  Say Y here to include support for high-speed I2C controller in the
+	  Hisilicon based 3716V200 SoCs. The IP module is private for Hisilicon,
+	  It be use on the Hisilicon media chipset from 2006 and will continue to use
+	  it.Specifically, the following versions of the chipset are supported:
+	  Hi3716CV200 (support six I2C module)
+	  Hi3719CV100 (support six I2C module)
+	  Hi3718CV100 (support six I2C module)
+	  Hi3719MV100 (support two I2C module)
+	  Hi3718MV100 (support two I2C module)
+
+	  This driver can also be built as a module.  If so, the module
+	  will be called i2c-hix5hd2.
+
 config I2C_ALI1563
 	tristate "ALI 1563"
 	depends on PCI
