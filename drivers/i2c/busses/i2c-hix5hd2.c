@@ -105,7 +105,7 @@ struct hix5hd2_i2c {
 	void __iomem *regs;
 	struct clk *clk;
 	struct device *dev;
-	spinlock_t lock;
+	spinlock_t lock;	/* IRQ synchronization */
 
 	int err;
 	enum hix5hd2_i2c_state state;
@@ -251,9 +251,10 @@ static int hix5hd2_rw_preprocess(struct hix5hd2_i2c *i2c)
 	if (HIX5I2C_STAT_INIT == i2c->state) {
 		i2c->state = HIX5I2C_STAT_RW;
 	} else if (HIX5I2C_STAT_RW == i2c->state) {
-		if (i2c->msg->flags & I2C_M_RD)
-			i2c->msg->buf[i2c->msg_ptr++] = data =
-				readl_relaxed(i2c->regs + HIX5I2C_RXR);
+		if (i2c->msg->flags & I2C_M_RD) {
+			data = readl_relaxed(i2c->regs + HIX5I2C_RXR);
+			i2c->msg->buf[i2c->msg_ptr++] = data;
+		}
 		i2c->len--;
 	} else {
 		dev_dbg(i2c->dev, "%s: error: i2c->state = %d, len = %d\n",
@@ -307,7 +308,7 @@ static irqreturn_t hix5hd2_i2c_irq(int irqno, void *dev_id)
 
 stop:
 	if ((HIX5I2C_STAT_RW_SUCCESS == i2c->state &&
-	    (i2c->msg->len == i2c->msg_ptr)) ||
+	     i2c->msg->len == i2c->msg_ptr) ||
 	    (HIX5I2C_STAT_RW_ERR == i2c->state)) {
 		hix5hd2_i2c_disable_irq(i2c);
 		hix5hd2_i2c_clr_pend_irq(i2c);
@@ -360,8 +361,8 @@ static int hix5hd2_i2c_xfer_msg(struct hix5hd2_i2c *i2c,
 		i2c->state = HIX5I2C_STAT_RW_ERR;
 		i2c->err = -ETIMEDOUT;
 		dev_warn(i2c->dev, "%s timeout=%d\n",
-			(msgs->flags & I2C_M_RD) ? "rx" : "tx",
-				i2c->adap.timeout);
+			 msgs->flags & I2C_M_RD ? "rx" : "tx",
+			 i2c->adap.timeout);
 	}
 
 	/*
@@ -382,7 +383,7 @@ static int hix5hd2_i2c_xfer_msg(struct hix5hd2_i2c *i2c,
 }
 
 static int hix5hd2_i2c_xfer(struct i2c_adapter *adap,
-			struct i2c_msg *msgs, int num)
+			    struct i2c_msg *msgs, int num)
 {
 	struct hix5hd2_i2c *i2c = i2c_get_adapdata(adap);
 	int i, ret, stop;
@@ -464,8 +465,8 @@ static int hix5hd2_i2c_probe(struct platform_device *pdev)
 	}
 	clk_prepare_enable(i2c->clk);
 
-	i2c->irq = ret = platform_get_irq(pdev, 0);
-	if (ret <= 0) {
+	i2c->irq = platform_get_irq(pdev, 0);
+	if (i2c->irq <= 0) {
 		dev_err(&pdev->dev, "cannot find HS-I2C IRQ\n");
 		ret = -EINVAL;
 		goto err_clk;
