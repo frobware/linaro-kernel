@@ -24,8 +24,7 @@ I2C0@f8b10000 {
 	compatible = "hisilicon,hix5hd2-i2c";
 	reg = <0xf8b10000 0x1000>;
 	interrupts = <0 38 4>;
-	clocks = <&clock HIX5HD2_I2C0_RST>;
-	clock-names = "rst_i2c0";
+	clocks = <&clock HIX5HD2_I2C0_CLK>;
 	#address-cells = <1>;
 	#size-cells = <0>;
 	status = "disabled";

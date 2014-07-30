@@ -484,67 +484,44 @@
 			clocks = <&clock  HIX5HD2_IR_RST>;
         	};
 
-		/*y00163442 yanwei 2014-6-25 add I2C dts*/
 		I2C0@f8b10000 {
 			compatible = "hisilicon,hix5hd2-i2c";
 			reg = <0xf8b10000 0x1000>;
 			interrupts = <0 38 4>;
-			clocks = <&clock HIX5HD2_I2C0_RST>;
-			clock-names = "rst_i2c0";
-			#address-cells = <1>;
-			#size-cells = <0>;
-			status = "disabled";
+			clocks = <&clock HIX5HD2_I2C0_CLK>;
 		};
 		I2C1@f8b11000 {
 			compatible = "hisilicon,hix5hd2-i2c";
 			reg = <0xf8b11000 0x1000>;
 			interrupts = <0 39 4>;
-			clocks = <&clock HIX5HD2_I2C1_RST>;
-			clock-names = "rst_i2c1";
-			#address-cells = <1>;
-			#size-cells = <0>;
-			status = "disabled";
+			clocks = <&clock HIX5HD2_I2C1_CLK>;
 		};
 		I2C2@f8b12000 {
 			compatible = "hisilicon,hix5hd2-i2c";
 			reg = <0xf8b12000 0x1000>;
 			interrupts = <0 40 4>;
-			clocks = <&clock HIX5HD2_I2C2_RST>;
-			clock-names = "rst_i2c2";
-			#address-cells = <1>;
-			#size-cells = <0>;
+			clocks = <&clock HIX5HD2_I2C2_CLK>;
 			status = "disabled";
 		};
 		I2C3@f8b13000 {
 			compatible = "hisilicon,hix5hd2-i2c";
 			reg = <0xf8b13000 0x1000>;
 			interrupts = <0 41 4>;
-			clocks = <&clock HIX5HD2_I2C3_RST>;
-			clock-names = "rst_i2c3";
-			#address-cells = <1>;
-			#size-cells = <0>;
+			clocks = <&clock HIX5HD2_I2C3_CLK>;
 			status = "disabled";
 		};
 		I2C4@f8b16000 {
 			compatible = "hisilicon,hix5hd2-i2c";
 			reg = <0xf8b16000 0x1000>;
 			interrupts = <0 43 4>;
-			clocks = <&clock HIX5HD2_I2C4_RST>;
-			clock-names = "rst_i2c4";
-			#address-cells = <1>;
-			#size-cells = <0>;
+			clocks = <&clock HIX5HD2_I2C4_CLK>;
 			status = "disabled";
 		};
 		I2C5@f8b17000 {
 			compatible = "hisilicon,hix5hd2-i2c";
 			reg = <0xf8b17000 0x1000>;
-			//reg=<0xf8A20100  0x1000>;
 			interrupts = <0 44 4>;
-			clocks = <&clock HIX5HD2_I2C5_RST>;
-			clock-names = "rst_i2c5";
-			#address-cells = <1>;
-			#size-cells = <0>;
-			//ywchh = <0>;
+			clocks = <&clock HIX5HD2_I2C5_CLK>;
 			status = "disabled";
 		};
 	};

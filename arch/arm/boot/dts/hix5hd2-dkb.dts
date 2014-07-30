@@ -15,7 +15,8 @@
 	compatible = "hisilicon,hi3716cv200";
 
 	chosen {
-		bootargs = "console=ttyAMA0,115200";
+		bootargs = "console=ttyAMA0,115200 root=/dev/nfs rw ip=192.168.1.100:192.168.1.1::255.255.255.0::eth0:off nfsroot=192.168.1.10:/rootfs";
+		//bootargs = "console=ttyAMA0,115200";
 	};
 
 	cpus {
