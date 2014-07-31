@@ -1,4 +1,4 @@
-I2C for Hisilicon media chipset platforms(3716,3719,3798...)
+I2C for Hisilicon hix5hd2 chipset platforms (3716,3719,3798...)
 
 Required properties :
 - compatible : Must be "hisilicon,hix5hd2-i2c"

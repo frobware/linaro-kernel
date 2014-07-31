@@ -107,7 +107,6 @@ struct hix5hd2_i2c {
 	struct device *dev;
 	spinlock_t lock;	/* IRQ synchronization */
 
-	int err;
 	enum hix5hd2_i2c_state state;
 	enum hix5hd2_i2c_speed speed_mode;
 
@@ -205,7 +204,6 @@ static void hix5hd2_rw_over(struct hix5hd2_i2c *i2c)
 		dev_dbg(i2c->dev, "%s: have not data to send\n", __func__);
 
 	i2c->state = HIX5I2C_STAT_RW_SUCCESS;
-	i2c->err = 0;
 }
 
 static void hix5hd2_rw_handle_stop(struct hix5hd2_i2c *i2c)
@@ -278,13 +276,11 @@ static irqreturn_t hix5hd2_i2c_irq(int irqno, void *dev_id)
 	if (int_status & I2C_ARBITRATE_INTR) {
 		/*Bus error */
 		dev_dbg(i2c->dev, "ARB bus loss\n");
-		i2c->err = -ENXIO;
 		i2c->state = HIX5I2C_STAT_RW_ERR;
 		goto stop;
 	} else if (int_status & I2C_ACK_INTR) {
 		/* ack error */
 		dev_dbg(i2c->dev, "No ACK from device\n");
-		i2c->err = -ENXIO;
 		i2c->state = HIX5I2C_STAT_RW_ERR;
 		goto stop;
 	}
@@ -293,7 +289,6 @@ static irqreturn_t hix5hd2_i2c_irq(int irqno, void *dev_id)
 		if (i2c->len > 0) {
 			ret = hix5hd2_rw_preprocess(i2c);
 			if (ret) {
-				i2c->err = ret;
 				i2c->state = HIX5I2C_STAT_RW_ERR;
 				goto stop;
 			}
@@ -349,7 +344,6 @@ static int hix5hd2_i2c_xfer_msg(struct hix5hd2_i2c *i2c,
 	i2c->msg_ptr = 0;
 	i2c->len = i2c->msg->len;
 	i2c->stop = stop;
-	i2c->err = 0;
 	i2c->state = HIX5I2C_STAT_INIT;
 
 	reinit_completion(&i2c->msg_complete);
@@ -359,27 +353,25 @@ static int hix5hd2_i2c_xfer_msg(struct hix5hd2_i2c *i2c,
 					      i2c->adap.timeout);
 	if (timeout == 0) {
 		i2c->state = HIX5I2C_STAT_RW_ERR;
-		i2c->err = -ETIMEDOUT;
+		ret = -ETIMEDOUT;
 		dev_warn(i2c->dev, "%s timeout=%d\n",
 			 msgs->flags & I2C_M_RD ? "rx" : "tx",
 			 i2c->adap.timeout);
+	} else {
+		ret = i2c->state;
 	}
 
 	/*
 	 * If this is the last message to be transfered (stop == 1)
 	 * Then check if the bus can be brought back to idle.
 	 */
-	if (i2c->state == HIX5I2C_STAT_RW_SUCCESS && stop) {
+	if (i2c->state == HIX5I2C_STAT_RW_SUCCESS && stop)
 		ret = hix5hd2_i2c_wait_bus_idle(i2c);
-		if (ret < 0) {
-			hix5hd2_i2c_reset(i2c);
-			return ret;
-		}
-	} else if (i2c->state == HIX5I2C_STAT_RW_ERR) {
-		hix5hd2_i2c_reset(i2c);
-	}
 
-	return i2c->err;
+	if (ret < 0)
+		hix5hd2_i2c_reset(i2c);
+
+	return ret;
 }
 
 static int hix5hd2_i2c_xfer(struct i2c_adapter *adap,
@@ -501,6 +493,7 @@ static int hix5hd2_i2c_probe(struct platform_device *pdev)
 		goto err_clk;
 	}
 
+	pm_suspend_ignore_children(&pdev->dev, true);
 	pm_runtime_set_autosuspend_delay(i2c->dev, MSEC_PER_SEC);
 	pm_runtime_use_autosuspend(i2c->dev);
 	pm_runtime_set_active(i2c->dev);
@@ -517,7 +510,6 @@ static int hix5hd2_i2c_remove(struct platform_device *pdev)
 {
 	struct hix5hd2_i2c *i2c = platform_get_drvdata(pdev);
 
-	clk_disable_unprepare(i2c->clk);
 	i2c_del_adapter(&i2c->adap);
 	pm_runtime_disable(i2c->dev);
 	pm_runtime_set_suspended(i2c->dev);
@@ -586,6 +578,6 @@ static void __exit hix5hd2_i2c_exit_driver(void)
 module_exit(hix5hd2_i2c_exit_driver);
 
 MODULE_DESCRIPTION("Hix5hd2 I2C Bus driver");
-MODULE_AUTHOR("yanwei, <sledge.yanwei@huawei.com>");
+MODULE_AUTHOR("Wei Yan <sledge.yanwei@huawei.com>");
 MODULE_LICENSE("GPL v2");
 MODULE_ALIAS("platform:i2c-hix5hd2");
