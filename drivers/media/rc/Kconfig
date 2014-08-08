@@ -164,6 +164,17 @@ config IR_ENE
 	   To compile this driver as a module, choose M here: the
 	   module will be called ene_ir.
 
+config IR_HIX5HD2
+	tristate "Hisilicon hix5hd2 IR remote control"
+	depends on RC_CORE
+	help
+	 Say Y here if you want to use hisilicon remote control.
+	 The driver passes raw pulse and space information to the LIRC decoder.
+	 To compile this driver as a module, choose M here: the module will be
+	 called hisi_ir.
+
+	 If you're not sure, select N here
+
 config IR_IMON
 	tristate "SoundGraph iMON Receiver and Display"
 	depends on USB_ARCH_HAS_HCD
