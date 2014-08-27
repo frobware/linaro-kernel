@@ -68,6 +68,7 @@ struct hix5hd2_ir_priv {
 	struct rc_dev		*rdev;
 	struct regmap		*regmap;
 	struct clk		*clock;
+	const char		*map_name;
 	unsigned long		rate;
 };
 
@@ -212,17 +213,13 @@ static int hix5hd2_ir_probe(struct platform_device *pdev)
 	struct device *dev = &pdev->dev;
 	struct resource *res;
 	struct hix5hd2_ir_priv *priv;
-	const struct of_device_id *match;
-
-	match = of_match_device(hix5hd2_ir_table, &pdev->dev);
-	if (!match)
-		return -EINVAL;
+	struct device_node *node = pdev->dev.of_node;
 
 	priv = devm_kzalloc(dev, sizeof(struct hix5hd2_ir_priv), GFP_KERNEL);
 	if (!priv)
 		return -ENOMEM;
 
-	priv->regmap = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+	priv->regmap = syscon_regmap_lookup_by_phandle(node,
 						       "hisilicon,power-syscon");
 	if (IS_ERR(priv->regmap)) {
 		dev_err(dev, "no power-reg\n");
@@ -264,8 +261,16 @@ static int hix5hd2_ir_probe(struct platform_device *pdev)
 	rdev->open = hix5hd2_ir_open;
 	rdev->close = hix5hd2_ir_close;
 	rdev->driver_name = IR_HIX5HD2_NAME;
-	rdev->map_name = RC_MAP_LIRC;
-	rdev->input_name = "Hisilicon hix5hd2 Remote Control Receiver";
+	priv->map_name = of_get_property(node, "linux,rc-map-name", NULL);
+	rdev->map_name = priv->map_name ?: RC_MAP_EMPTY;
+	rdev->input_name = IR_HIX5HD2_NAME;
+	rdev->input_phys = IR_HIX5HD2_NAME "/input0";
+	rdev->input_id.bustype = BUS_HOST;
+	rdev->input_id.vendor = 0x0001;
+	rdev->input_id.product = 0x0001;
+	rdev->input_id.version = 0x0100;
+	rdev->rx_resolution = US_TO_NS(10);
+	rdev->timeout = US_TO_NS(IR_CFG_SYMBOL_MAXWIDTH * 10);
 
 	ret = rc_register_device(rdev);
 	if (ret < 0)
@@ -331,7 +336,6 @@ static SIMPLE_DEV_PM_OPS(hix5hd2_ir_pm_ops, hix5hd2_ir_suspend,
 static struct platform_driver hix5hd2_ir_driver = {
 	.driver = {
 		.name = IR_HIX5HD2_NAME,
-		.owner	= THIS_MODULE,
 		.of_match_table = hix5hd2_ir_table,
 		.pm     = &hix5hd2_ir_pm_ops,
 	},
