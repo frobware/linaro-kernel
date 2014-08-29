@@ -1122,7 +1122,7 @@ HI_S32 DRV_PDM_GetData(const HI_CHAR *BufName, HI_U32 *pu32DataAddr, HI_U32 *pu3
 HI_S32 DRV_PDM_GetSoundParam(HI_UNF_SND_E enSound, HI_UNF_PDM_SOUND_PARAM_S *pstSoundParam)
 {
 	printk("===%s====\n",__FUNCTION__);
-	return HI_SUCCESS;
+	return HI_FAILURE;
 }
 
 #endif

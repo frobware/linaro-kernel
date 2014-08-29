@@ -11,6 +11,7 @@ subdir-ccflags-y += 	-DCHIP_TYPE_hi3716cv200 \
 
 obj-y 					+= common/
 obj-${CONFIG_HI_AIAO_SUPPORT}		+= aiao/
+obj-${CONFIG_HI_AIAO_SUPPORT}		+= adsp/
 obj-${CONFIG_HI_PDM_SUPPORT}		+= pdm/
 obj-${CONFIG_HI_PQ_SUPPORT}		+= pq/
 obj-${CONFIG_HI_HDMI_SUPPORT}		+= hdmi/

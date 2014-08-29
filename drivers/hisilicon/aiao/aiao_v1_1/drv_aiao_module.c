@@ -167,10 +167,8 @@ HI_VOID AIAO_DRV_ModExit(HI_VOID)
     HI_INFO_AO(" **** AIAO_DRV_ModExit OK  **** \n");  
 }
 
-#ifdef MODULE
 module_init(AIAO_DRV_ModInit);
 module_exit(AIAO_DRV_ModExit);
-#endif
 
 MODULE_AUTHOR("HISILICON");
 MODULE_LICENSE("GPL");
