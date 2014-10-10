@@ -1,0 +1,11 @@
+config DRM_HIX5HD2
+	tristate "DRM Support for Hisilicon HIX5HD2 Soc"
+	depends on DRM && (ARM || SUPERH)
+	select DRM_KMS_HELPER
+	select DRM_KMS_FB_HELPER
+	select DRM_KMS_CMA_HELPER
+	select DRM_GEM_CMA_HELPER
+	help
+	  Choose this option if you have an HIX5HD2 chipset.
+	  If M is selected the module will be called hix5hd2-drm.
+
