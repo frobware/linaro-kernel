@@ -1,5 +1,5 @@
 /*
- * hix5hd2_drm_drv.h  --  Hisilicon HIX5HD2 DRM driver
+ * hix5hd2_drm_drv.h  --  Hisilicon hix5hd2 DRM driver
  *
  * Copyright (C) 2014 Hisilicon Corporation
  *
@@ -16,27 +16,12 @@
 
 #include <linux/kernel.h>
 #include <linux/spinlock.h>
-
+#include "hix5hd2_drm_crtc.h"
+#include "hix5hd2_drm_plane.h"
 
 struct clk;
 struct device;
 struct drm_device;
-
-struct hix5hd2_drm_crtc {
-	struct drm_crtc crtc;
-
-	struct drm_pending_vblank_event *event;
-	int dpms;
-};
-
-struct hix5hd2_drm_encoder {
-	struct drm_encoder encoder;
-	int dpms;
-};
-
-struct hix5hd2_drm_connector {
-	struct drm_connector connector;
-};
 
 struct hix5hd2_drm_device {
 //	struct device *dev;
@@ -45,9 +30,12 @@ struct hix5hd2_drm_device {
 
 	struct drm_device *ddev;
 
-	struct hix5hd2_drm_crtc crtc;
-	struct hix5hd2_drm_encoder encoder;
-	struct hix5hd2_drm_connector connector;
+	struct hix5hd2_drm_plane gfx0;
+	struct hix5hd2_drm_plane video0;	
+	struct hix5hd2_drm_crtc dhd0;
+	struct hix5hd2_drm_encoder hdate;
+	struct hix5hd2_drm_connector ypbyr;
+	struct hix5hd2_drm_connector hdmi;	
 };
 
 #endif /* __HIX5HD2_DRM_DRV_H__ */

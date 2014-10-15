@@ -19,33 +19,11 @@
 #include "hix5hd2_drm_drv.h"
 #include "hix5hd2_drm_plane.h"
 
-enum hix5hd2_drm_plane_type {
-	HI_DRM_PLANE_TYPE_VIDEO,
-	HI_DRM_PLANE_TYPE_GFX,		
-};
-
-struct hix5hd2_drm_plane {
-	struct drm_plane plane;
-	enum hix5hd2_drm_plane_id id;
-	unsigned int alpha;
-#if 0
-	const struct shmob_drm_format_info *format;
-	unsigned long dma[2];
-
-	unsigned int src_x;
-	unsigned int src_y;
-	unsigned int crtc_x;
-	unsigned int crtc_y;
-	unsigned int crtc_w;
-	unsigned int crtc_h;
-#endif	
-};
-
 #define to_hix5hd2_plane(p)	container_of(p, struct hix5hd2_drm_plane, plane)
 
 void hix5hd2_drm_plane_setup(struct drm_plane *plane)
 {
-	struct hix5hd2_drm_plane *splane = to_hix5hd2_plane(plane);
+	struct hix5hd2_drm_plane *hplane = to_hix5hd2_plane(plane);
 
 	if (plane->fb == NULL)
 		return;

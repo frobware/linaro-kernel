@@ -1,5 +1,5 @@
 /*
- * hix5hd2_drm_regs.h  --  Hisilicon hix5hd2 DRM registers
+ * hix5hd2_drm_regs.h  --  HISILICON HIX5HD2 DRM registers
  *
  * Copyright (C) 2014 Hisilicon Corporation
  *
@@ -24,6 +24,10 @@
 #define	VO_MUX		0x0100
 #define VO_MUX_DAC	0x0104
 #define VO_DAC_CTRL	0x0120
+#define VO_DAC_C_CTRL	0x0130
+#define VO_DAC_R_CTRL	0x0134
+#define VO_DAC_G_CTRL	0x0138
+#define VO_DAC_B_CTRL	0x013C
 
 /* V0 */
 #define MIXV0_MIX	0xB008
@@ -93,15 +97,47 @@
 /* DHD0 */
 #define DHD_OFFSET	0x400
 #define DHD0_CTRL	0xC000
+#define DHD0_REGUP_BIT	0	
+#define DHD0_DISP_MODE_START	1
+#define DHD0_DISP_MODE_LEN	3
+#define DISP_MODE_2D		0x0
+#define DISP_MODE_3D_SBS	0x1
+#define DISP_MODE_3D_TAB	0x4
+#define DISP_MODE_3D_FP		0x5
+#define DHD0_IOP_BIT		4
+#define DHD0_UNKNOWN_BIT	15
+#define DHD0_P2I_EN_BIT		28
+#define DHD0_INTF_EN_BIT	31
+
 #define DHD0_VSYNC	0xC004
+#define VACT_START	0
+#define VACT_LEN	12
+#define VBB_START	12
+#define VBB_LEN		8
+#define VFB_START	20
+#define VFB_LEN		8
 #define DHD0_HSYNC1	0xC008
+#define HACT_START	0
+#define HACT_LEN	16
+#define HBB_START	16
+#define HBB_LEN		16
 #define DHD0_HSYNC2	0xC00C
+#define HFB_START	0
+#define HFB_LEN		16
+#define HMID_START	16
+#define HMID_LEN	16
 #define DHD0_VPLUS	0xC010
 #define DHD0_PWR	0xC014
+#define HPW_START	0
+#define HPW_LEN		16
+#define VPW_START	16
+#define VPW_LEN		8
 #define DHD0_VTTHD3	0xC018
 #define DHD0_VTTHD	0xC01C
 #define DHD0_SYNC_INV	0xC020
 #define DHD0_ABUFTHD	0xC034
+#define DHD0_VGA_DACDET1	0xC03C
+
 /* DHD0-CSC */
 #define DHD0_CSC_IDC	0xC040
 #define DHD0_CSC_ODC	0xC044
@@ -124,11 +160,34 @@
 #define HDATE_EN	0xF004
 #define HDATE_POLA_CTRL	0xF008
 #define HDATE_VIDEO_FORMAT	0xF00C
+#define VIDEO_FT_START	0
+#define VIDEO_FT_LEN	4
+#define VIDEO_FT_720P		0x2
+#define VIDEO_FT_1080P		0x3
+#define VIDEO_FT_1080I		0x4
+#define SYNC_ADD_CTRL_START	4
+#define SYNC_ADD_CTRL_LEN	3
+#define SYNC_ADD_R_PR		0x4
+#define SYNC_ADD_G_Y		0x2
+#define SYNC_ADD_B_PB		0x1
+#define VIDEO_OUT_CTRL_START	7
+#define VIDEO_OUT_CTRL_LEN	2
+#define VIDEO_OUT_RGB		0x0
+#define VIDEO_OUT_YPBPR		0x1
+#define VIDEO_OUT_VGA		0x2
+#define CSC_CTRL_START		9
+#define CSC_CTRL_LEN		3
+#define CSC_RND_DISABLE_START	12
+#define CSC_RND_DISABLE_LEN	1
+
 #define HDATE_STATE	0xF010
 #define HDATE_OUT_CTRL	0xF014
 /* HDATE-SRC-COEF */
 /* HDATE-CSC */
 #define HDATE_VBI_CTRL	0xF0A4
+#define HDATE_DACDET1	0xF0C0
+#define HDATE_DACDET2	0xF0C4
+
 /* HDATE_CGMS */
 #define HDATE_CLIP	0xF0F0
 
