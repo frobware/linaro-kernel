@@ -31,6 +31,7 @@ struct hix5hd2_drm_plane {
 	struct drm_plane plane;
 	enum hix5hd2_drm_plane_id id;
 	unsigned int alpha;
+	unsigned int index;
 #if 0
 	const struct shmob_drm_format_info *format;
 	unsigned long dma[2];
@@ -44,8 +45,21 @@ struct hix5hd2_drm_plane {
 #endif	
 };
 
+#define to_hix5hd2_plane(p)	container_of(p, struct hix5hd2_drm_plane, plane)
 
+#if 0
 int hix5hd2_drm_plane_create(struct hix5hd2_drm_device *sdev, unsigned int index);
+#else
+int hix5hd2_drm_plane_create(struct hix5hd2_drm_device *hdev);
+#endif
 void hix5hd2_drm_plane_setup(struct drm_plane *plane);
+
+int
+hix5hd2_drm_plane_update(struct drm_plane *plane, struct drm_crtc *crtc,
+		       struct drm_framebuffer *fb, int crtc_x, int crtc_y,
+		       unsigned int crtc_w, unsigned int crtc_h,
+		       uint32_t src_x, uint32_t src_y,
+		       uint32_t src_w, uint32_t src_h);
+
 
 #endif /* __HIX5HD2_DRM_PLANE_H__ */

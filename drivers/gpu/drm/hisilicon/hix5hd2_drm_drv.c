@@ -109,6 +109,7 @@ int hix5hd2_drm_modeset_init(struct hix5hd2_drm_device *hdev)
 	drm_mode_config_init(hdev->ddev);
 #if 1
 	hix5hd2_drm_crtc_create(hdev);
+	hix5hd2_drm_plane_create(hdev);
 	hix5hd2_drm_encoder_create(hdev);
 	hix5hd2_drm_connector_create(hdev, &hdev->hdate.encoder);
 
@@ -559,7 +560,9 @@ done:
 	/*hix5hd2_drm_modeset_init*/
 	hix5hd2_drm_modeset_init(hdev);
 
-	hix5hd2_drm_plane_create(hdev,HIX5HD2_DRM_PLANE_G0);
+	//hix5hd2_drm_plane_create(hdev,HIX5HD2_DRM_PLANE_G0);
+
+	drm_vblank_init(dev, 1);
 
 	/*irq registration*/
 	drm_irq_install(dev);
@@ -594,26 +597,22 @@ static int hix5hd2_drm_irq_postinstall(struct drm_device *dev)
 
 static irqreturn_t hix5hd2_drm_irq(int irq, void *arg)
 {
+	struct drm_device *dev = arg;
+	struct hix5hd2_drm_device *hdev = dev->dev_private;
+	unsigned long flags;
+	u32 status;
+
+	status = hix5hd2_read_reg(hdev, VOMSKINTSTA);
+	hix5hd2_write_reg(hdev, VOMSKINTSTA, status);
+	if (status & (1 << VOINTMSK_DHD0VTTHD1_BIT)) {
+		drm_handle_vblank(dev, 0);
+		hix5hd2_drm_crtc_finish_page_flip(&hdev->dhd0);
+	}
+
 	return IRQ_HANDLED;
 }
 
-#if 0
-static int hix5hd2_drm_enable_vblank(struct drm_device *dev, int crtc)
-{
-	struct hix5hd2_drm_device *hdev = dev->dev_private;
 
-	hix5hd2_drm_crtc_enable_vblank(hdev, true);
-
-	return 0;
-}
-
-static void hix5hd2_drm_disable_vblank(struct drm_device *dev, int crtc)
-{
-	struct hix5hd2_drm_device *hdev = dev->dev_private;
-
-	hix5hd2_drm_crtc_enable_vblank(hdev, false);
-}
-#endif
 
 static const struct file_operations hix5hd2_drm_fops = {
 	.owner		= THIS_MODULE,
@@ -637,11 +636,9 @@ static struct drm_driver hix5hd2_drm_driver = {
 	.irq_preinstall		= hix5hd2_drm_irq_preinstall,
 	.irq_handler		= hix5hd2_drm_irq,
 	.irq_postinstall	= hix5hd2_drm_irq_postinstall,
-#if 0	
 	.get_vblank_counter	= drm_vblank_count,
-	.enable_vblank		= hix5hd2_drm_enable_vblank,
-	.disable_vblank		= hix5hd2_drm_disable_vblank,
-#endif	
+	.enable_vblank		= hix5hd2_drm_crtc_enable_vblank,
+	.disable_vblank		= hix5hd2_drm_crtc_disable_vblank,
 	.gem_free_object	= drm_gem_cma_free_object,
 	.gem_vm_ops		= &drm_gem_cma_vm_ops,
 #if 0	

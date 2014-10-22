@@ -14,6 +14,7 @@
 #include <drm/drm_crtc_helper.h>
 #include <drm/drm_fb_cma_helper.h>
 #include <drm/drm_gem_cma_helper.h>
+#include <drm/drm_plane_helper.h>
 
 #include "hix5hd2_drm_regs.h"
 #include "hix5hd2_drm_drv.h"
@@ -33,7 +34,7 @@ void hix5hd2_drm_plane_setup(struct drm_plane *plane)
 }
 
 
-static int
+int
 hix5hd2_drm_plane_update(struct drm_plane *plane, struct drm_crtc *crtc,
 		       struct drm_framebuffer *fb, int crtc_x, int crtc_y,
 		       unsigned int crtc_w, unsigned int crtc_h,
@@ -152,10 +153,11 @@ static const struct drm_plane_funcs hix5hd2_drm_plane_funcs = {
 	.destroy = hix5hd2_drm_plane_destroy,
 };
 
-static const uint32_t hix5hd2_plane_formats[] = {
-	DRM_FORMAT_ARGB8888,
+static const uint32_t hix5hd2_video_plane_formats[] = {
+	DRM_FORMAT_NV21,
 };
 
+#if 0
 int hix5hd2_drm_plane_create(struct hix5hd2_drm_device *hdev,enum hix5hd2_drm_plane_id plane_id)
 {
 	struct hix5hd2_drm_plane *hplane;
@@ -171,4 +173,30 @@ int hix5hd2_drm_plane_create(struct hix5hd2_drm_device *hdev,enum hix5hd2_drm_pl
 
 	return ret;
 }
+#else
+#if 0
+static uint32_t hix5hd2_gfx_formats[] = {
+	DRM_FORMAT_ARGB1555,
+	DRM_FORMAT_ARGB8888,
+};
+#endif
+int hix5hd2_drm_plane_create(struct hix5hd2_drm_device *hdev)
+{
+//	struct drm_plane *primary = &hdev->gfx0.plane;
+	struct drm_plane *overlay = &hdev->video0.plane;
+	struct drm_crtc  *crtc = &hdev->dhd0.crtc;
+	int ret;
+#if 0
+	memset(primary,0,sizeof(*primary));
+	ret = drm_universal_plane_init(hdev->ddev, primary, 0, &drm_primary_helper_funcs,
+			     hix5hd2_gfx_formats, ARRAY_SIZE(hix5hd2_gfx_formats),
+			     DRM_PLANE_TYPE_PRIMARY);
+#endif	
+	memset(overlay,0,sizeof(*overlay));
+	ret = drm_universal_plane_init(hdev->ddev, overlay, drm_crtc_mask(crtc), &hix5hd2_drm_plane_funcs, 
+				hix5hd2_plane_formats, ARRAY_SIZE(hix5hd2_plane_formats), 
+				DRM_PLANE_TYPE_OVERLAY);
+	return ret;
+}
+#endif
 

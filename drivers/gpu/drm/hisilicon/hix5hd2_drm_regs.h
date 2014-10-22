@@ -20,6 +20,7 @@
 #define VOINTSTA	0x0004
 #define VOMSKINTSTA	0x0008
 #define VOINTMSK	0x000C
+#define VOINTMSK_DHD0VTTHD1_BIT	0
 #define VOAXICTRL	0x0034
 #define	VO_MUX		0x0100
 #define VO_MUX_DAC	0x0104
@@ -31,10 +32,68 @@
 
 /* V0 */
 #define MIXV0_MIX	0xB008
+#define VO_CTRL		0x0800
+#define VO_UPD		0x0804
+#define V0_IRESO	0x0828
+#define V0_ORESO	0x082C
+#define V0_CBMPARA	0x0838
+#define V0_CPOS		0x0844
+#define V0_DRAWMODE	0x0848
+#define V0_HLCOEFAD	0x0850
+#define V0_HCCOEFAD	0x0854
+#define V0_VLCOEFAD	0x0858
+#define V0_VCCOEFAD	0x085C
+#define V0_DFPOS	0x0860
+#define V0_DLPOS	0x0864
+#define V0_VFPOS	0x0868
+#define V0_VLPOS	0x086C
+#define V0_BK		0x0870
+#define V0_ALPHA	0x0874
+#define V0_HSP		0x08C0
+#define V0_HLOFFSET 	0x08C4
+#define V0_HCOFFSET 	0x08C8
+#define V0_VSP	 	0x08D8
+#define V0_VSR	 	0x08DC
+#define V0_VOFFSET 	0x08E0
+#define V0_VBOFFSET 	0x08E4
+#define V0_IFIRCOEF01	0x0980
+#define V0_IFIRCOEF23	0x0984
+#define V0_IFIRCOEF45	0x0988
+#define V0_IFIRCOEF67	0x098C
+
+/* VP0 */
+#define VP0_CTRL	0x4000
+#define VP0_UPD		0x4004
+#define VP0_IRESO	0x4020
+#define VP0_DFPOS	0x4200
+#define VP0_DLPOS	0x4204
+#define VP0_VFPOS	0x4208
+#define VP0_VLPOS	0x420C
+#define VP0_BK		0x4210
+#define VP0_ALPHA	0x4214
+#define VP0_CSC0_IDC	0x4300
+#define VP0_CSC0_ODC	0x4304
+#define VP0_CSC0_IODC	0x4308
+#define VP0_CSC0_P0	0x430C
+#define VP0_CSC0_P1	0x4310
+#define VP0_CSC0_P2	0x4314
+#define VP0_CSC0_P3	0x4318
+#define VP0_CSC0_P4	0x431C
 
 /* G0 */
 #define GFX_OFFSET	0x800
 #define G0_CTRL		0x6000
+#define G0_IFMT_START	0
+#define G0_IFMT_LEN	8
+#define G0_BITEXT_START	8
+#define G0_BITEXT_LEN	2
+#define G0_READMODE_BIT	26
+#define G0_UPDMODE_BIT	27
+#define G0_UPDMODE_FRAME	0
+#define G0_UPDMODE_FIELD	1
+#define G0_READMODE_AUTO	0
+#define G0_READMODE_PRO		1
+#define G0_ENABLE_BIT	31
 #define G0_UPD		0x6004
 #define G0_ADDR		0x6010
 #define G0_STRIDE	0x601C
@@ -45,6 +104,8 @@
 #define G0_IH_LEN	12
 #define G0_SFPOS	0x6024
 #define G0_CBMPARA	0x6030
+#define G0_GALPHA_START	0
+#define G0_GALPHA_LEN	8
 #define G0_CKEYMAX	0x6034
 #define G0_CKEYMIN	0x6038
 #define G0_CMASK	0x603C
@@ -134,6 +195,14 @@
 #define VPW_LEN		8
 #define DHD0_VTTHD3	0xC018
 #define DHD0_VTTHD	0xC01C
+#define DHD0_VTTHD1_START	0
+#define DHD0_VTTHD1_LEN		13
+#define DHD0_VTTHD1_MODE_BIT	15
+#define DHD0_VTTHD2_START	16
+#define DHD0_VTTHD2_LEN		13
+#define DHD0_VTTHD2_MODE_BIT	31
+#define VTTHD_MODE_FRAME	0
+#define VTTHD_MODE_FILED	1
 #define DHD0_SYNC_INV	0xC020
 #define DHD0_ABUFTHD	0xC034
 #define DHD0_VGA_DACDET1	0xC03C
@@ -193,7 +262,7 @@
 
 
 
-
+#define hix5hd2_read_reg(dev, reg)			readl_relaxed(dev->base + reg)
 #define hix5hd2_write_reg(dev, reg, val)		writel_relaxed(val, dev->base + reg)
 #define hix5hd2_write_bits(dev, reg, start, len, val)   \
 	do { \
