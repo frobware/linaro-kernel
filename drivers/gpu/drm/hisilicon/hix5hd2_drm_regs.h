@@ -32,8 +32,8 @@
 
 /* V0 */
 #define MIXV0_MIX	0xB008
-#define VO_CTRL		0x0800
-#define VO_UPD		0x0804
+#define V0_CTRL		0x0800
+#define V0_UPD		0x0804
 #define V0_IRESO	0x0828
 #define V0_ORESO	0x082C
 #define V0_CBMPARA	0x0838

@@ -194,7 +194,7 @@ int hix5hd2_drm_plane_create(struct hix5hd2_drm_device *hdev)
 #endif	
 	memset(overlay,0,sizeof(*overlay));
 	ret = drm_universal_plane_init(hdev->ddev, overlay, drm_crtc_mask(crtc), &hix5hd2_drm_plane_funcs, 
-				hix5hd2_plane_formats, ARRAY_SIZE(hix5hd2_plane_formats), 
+				hix5hd2_video_plane_formats, ARRAY_SIZE(hix5hd2_video_plane_formats), 
 				DRM_PLANE_TYPE_OVERLAY);
 	return ret;
 }

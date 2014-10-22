@@ -275,7 +275,7 @@ static int hix5hd2_drm_crtc_page_flip(struct drm_crtc *crtc,
 {
 	struct hix5hd2_drm_device *hdev = crtc->dev->dev_private;
 	struct hix5hd2_drm_crtc	*hcrtc = to_hix5hd2_crtc(crtc);
-	struct hix5hd2_drm_crtc	*hplane = to_hix5hd2_plane(crtc->primary);
+	struct hix5hd2_drm_plane *hplane = to_hix5hd2_plane(crtc->primary);
 	struct drm_device *dev = crtc->dev;
 	struct drm_gem_cma_object *gem;
 	unsigned long flags;	
@@ -373,7 +373,7 @@ int hix5hd2_drm_crtc_enable_vblank(struct drm_device *dev, int crtc)
 	return 0;
 }
 
-int hix5hd2_drm_crtc_disable_vblank(struct drm_device *dev, int crtc)
+void hix5hd2_drm_crtc_disable_vblank(struct drm_device *dev, int crtc)
 {
 	struct hix5hd2_drm_device *hdev = dev->dev_private;
 
@@ -381,7 +381,7 @@ int hix5hd2_drm_crtc_disable_vblank(struct drm_device *dev, int crtc)
 		hix5hd2_write_bits(hdev, VOINTMSK, VOINTMSK_DHD0VTTHD1_BIT, 1, 0);
 	} 
 	
-	return 0;
+	return;
 }
 
 /* -----------------------------------------------------------------------------
