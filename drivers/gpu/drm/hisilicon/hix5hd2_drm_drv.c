@@ -612,7 +612,35 @@ static irqreturn_t hix5hd2_drm_irq(int irq, void *arg)
 	return IRQ_HANDLED;
 }
 
+#ifdef CONFIG_DEBUG_FS
+static struct drm_info_list hix5hd2_drm_debugfs_list[] = {
+		{ "fb",   drm_fb_cma_debugfs_show, 0 },
+};
 
+
+int hix5hd2_debugfs_init(struct drm_minor *minor)
+{
+	struct drm_device *dev = minor->dev;
+	int ret;
+
+	ret = drm_debugfs_create_files(hix5hd2_drm_debugfs_list,
+			ARRAY_SIZE(hix5hd2_drm_debugfs_list),
+			minor->debugfs_root, minor);
+	if (ret) {
+		dev_err(dev->dev, "could not install hix5hd2_drm_debugfs_list\n");
+		return ret;
+	}
+
+	return ret;
+}
+
+void hix5hd2_debugfs_cleanup(struct drm_minor *minor)
+{
+	drm_debugfs_remove_files(hix5hd2_drm_debugfs_list,
+			ARRAY_SIZE(hix5hd2_drm_debugfs_list), minor);
+}
+
+#endif
 
 static const struct file_operations hix5hd2_drm_fops = {
 	.owner		= THIS_MODULE,
@@ -656,6 +684,10 @@ static struct drm_driver hix5hd2_drm_driver = {
 	.dumb_map_offset	= drm_gem_cma_dumb_map_offset,
 	.dumb_destroy		= drm_gem_dumb_destroy,
 	.fops			= &hix5hd2_drm_fops,
+#ifdef CONFIG_DEBUG_FS
+	.debugfs_init	    	= hix5hd2_debugfs_init,
+	.debugfs_cleanup    	= hix5hd2_debugfs_cleanup,
+#endif
 	.name			= HIX5HD2_DRM_DRIVER_NAME,
 	.desc			= HIX5HD2_DRM_DRIVER_DESC,
 	.date			= HIX5HD2_DRM_DRIVER_DATE,

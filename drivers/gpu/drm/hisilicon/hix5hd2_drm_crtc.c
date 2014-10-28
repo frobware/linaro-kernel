@@ -340,9 +340,9 @@ int hix5hd2_drm_crtc_create(struct hix5hd2_drm_device *hdev)
 	int ret;
 
 	/*gfx0*/
-	hdev->gfx0.index = 0;
-	hdev->gfx0.alpha = 255;
-	primary = &hdev->gfx0.plane;
+	hdev->dhd0.gfx.index = 0;
+	hdev->dhd0.gfx.alpha = 255;
+	primary = &hdev->dhd0.gfx.plane;
 	memset(primary,0,sizeof(*primary));
 	ret = drm_universal_plane_init(hdev->ddev, primary, 0, &drm_primary_helper_funcs,
 			     hix5hd2_gfx_formats, ARRAY_SIZE(hix5hd2_gfx_formats),

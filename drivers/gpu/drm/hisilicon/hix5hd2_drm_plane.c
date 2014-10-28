@@ -47,82 +47,89 @@ hix5hd2_drm_plane_update(struct drm_plane *plane, struct drm_crtc *crtc,
 	unsigned int index = 0;
 	unsigned int gp_index = 0;
 	unsigned int value;
+	unsigned char format,uv_order,zme_in_format;
 
 	printk("===hix5hd2_drm_plane_update:cx %d cy %d cw %d ch %d sx %d sy %d sw %d sh %d===\n",
-		crtc_x,crtc_y,crtc_w,crtc_h,src_x,src_y,src_w >> 16,src_h >> 16);
-#if 0
+		crtc_x,crtc_y,crtc_w,crtc_h,src_x >> 16,src_y >> 16,src_w >> 16,src_h >> 16);
+
+	/*V0*/
 	switch (fb->pixel_format) {
-		case DRM_FORMAT_ARGB8888: {
-			value 
-		}
+	case DRM_FORMAT_NV21: 
+		format = 0x3;	
+		uv_order = 0;
+		zme_in_format = V0_FMT_YUV420;
+		break;
+	case DRM_FORMAT_NV12:
+		format = 0x3;	
+		uv_order = 1;
+		zme_in_format = V0_FMT_YUV420;
+		break;
+	default:
+		printk("%s %d: Invalid pixel format:%s\n",__FUNCTION__,__LINE__,drm_get_format_name(fb->pixel_format));
+		return -EINVAL;
 	}
-#else	
-	hix5hd2_write_gfx_reg(hdev, index, G0_CTRL, 0xc000368);
-#endif
-	crtc_x = 0;
-	crtc_y = 0;
-	hix5hd2_write_gfx_bits(hdev, index, G0_IRESO, G0_IW_START, G0_IW_LEN, fb->width - 1);
-	hix5hd2_write_gfx_bits(hdev, index, G0_IRESO, G0_IH_START, G0_IH_LEN, fb->height - 1);
-	hix5hd2_write_gfx_reg(hdev, index, G0_SFPOS, 0x0);
-	hix5hd2_write_gfx_reg(hdev, index, G0_DFPOS, 0x0);
-	hix5hd2_write_gfx_bits(hdev, index, G0_DLPOS, G0_XPOS_START, G0_XPOS_LEN, fb->width - 1);
-	hix5hd2_write_gfx_bits(hdev, index, G0_DLPOS, G0_YPOS_START, G0_YPOS_LEN, fb->height - 1);
-	hix5hd2_write_gfx_bits(hdev, index, G0_VFPOS, G0_XPOS_START, G0_XPOS_LEN, crtc_x);
-	hix5hd2_write_gfx_bits(hdev, index, G0_VFPOS, G0_YPOS_START, G0_YPOS_LEN, crtc_y);
-	hix5hd2_write_gfx_bits(hdev, index, G0_VLPOS, G0_XPOS_START, G0_XPOS_LEN, crtc_x + crtc_w - 1);
-	hix5hd2_write_gfx_bits(hdev, index, G0_VLPOS, G0_YPOS_START, G0_YPOS_LEN, crtc_y + crtc_h - 1);
-#if 0
-	hix5hd2_write_gfx_reg(hdev, index, G0_VFPOS, 0x0);
-	hix5hd2_write_gfx_reg(hdev, index, G0_VLPOS, 0x2cf4ff);
-#endif	
-	hix5hd2_write_gfx_reg(hdev, index, G0_STRIDE, DIV_ROUND_UP(fb->pitches[0], 16));
+	hix5hd2_write_bits(hdev, V0_CTRL, V0_IFMT_START, V0_IFMT_LEN, format);
+	hix5hd2_write_bits(hdev, V0_CTRL, V0_UV_ORDER_BIT, 1, uv_order);
+	hix5hd2_write_bits(hdev, V0_CTRL, V0_CHM_RMODE_START, V0_CHM_RMODE_LEN, V0_RMODE_FRAME);
+	hix5hd2_write_bits(hdev, V0_CTRL, V0_LM_RMODE_START, V0_LM_RMODE_LEN, V0_RMODE_FRAME);
+	/* VUP_MODE  && IFIR_MODE*/
+	hix5hd2_write_bits(hdev, V0_CTRL, V0_VUP_MODE_BIT, 1, 1);
+	hix5hd2_write_bits(hdev, V0_CTRL, V0_IFIR_MODE_START, V0_IFIR_MODE_LEN, 0x2);
+	hix5hd2_write_bits(hdev, V0_CTRL, V0_ENABLE_BIT, 1, 1);
 
+	/* POSITION */
+	hix5hd2_write_bits(hdev, V0_IRESO, V0_RESO_WIDTH_START, V0_RESO_WIDTH_LEN, (src_w >> 16) - 1);
+	hix5hd2_write_bits(hdev, V0_IRESO, V0_RESO_HEIGHT_START, V0_RESO_HEIGHT_LEN, (src_h >> 16) - 1);	
+	hix5hd2_write_bits(hdev, V0_ORESO, V0_RESO_WIDTH_START, V0_RESO_WIDTH_LEN, crtc_w - 1);
+	hix5hd2_write_bits(hdev, V0_ORESO, V0_RESO_HEIGHT_START, V0_RESO_HEIGHT_LEN, crtc_h - 1);
+	hix5hd2_write_bits(hdev, V0_CPOS, V0_SRC_XFPOS_START, V0_SRC_XFPOS_LEN, 0);
+	hix5hd2_write_bits(hdev, V0_CPOS, V0_SRC_XLPOS_START, V0_SRC_XLPOS_LEN, (src_w >> 16) - 1);
+	hix5hd2_write_bits(hdev, V0_DFPOS, V0_XPOS_START, V0_XPOS_LEN, crtc_x);
+	hix5hd2_write_bits(hdev, V0_DFPOS, V0_YPOS_START, V0_YPOS_LEN, crtc_y);
+	hix5hd2_write_bits(hdev, V0_DLPOS, V0_XPOS_START, V0_XPOS_LEN, crtc_x + crtc_w - 1);
+	hix5hd2_write_bits(hdev, V0_DLPOS, V0_YPOS_START, V0_YPOS_LEN, crtc_y + crtc_h - 1);
+	hix5hd2_write_bits(hdev, V0_VFPOS, V0_XPOS_START, V0_XPOS_LEN, crtc_x);
+	hix5hd2_write_bits(hdev, V0_VFPOS, V0_YPOS_START, V0_YPOS_LEN, crtc_y);
+	hix5hd2_write_bits(hdev, V0_VLPOS, V0_XPOS_START, V0_XPOS_LEN, crtc_x + crtc_w - 1);
+	hix5hd2_write_bits(hdev, V0_VLPOS, V0_YPOS_START, V0_YPOS_LEN, crtc_y + crtc_h - 1);
+
+	/* ALPHA */
+	hix5hd2_write_bits(hdev, V0_CBMPARA, V0_ALPHA_START, V0_ALPHA_LEN, hplane->alpha);	
+	hix5hd2_write_reg(hdev, V0_BKCOLOR, 0x04080200);
+	hix5hd2_write_reg(hdev, V0_BKALPHA, 0xff);
+
+	/* SCALE */
+	hix5hd2_write_bits(hdev, V0_VSP, V0_ZME_IN_FMT_START, V0_ZME_FMT_LEN, zme_in_format);
+	hix5hd2_write_bits(hdev, V0_VSP, V0_ZME_OUT_FMT_START, V0_ZME_FMT_LEN, V0_FMT_YUV422);
+	hix5hd2_write_bits(hdev, V0_VSP, V0_VSP_L_EN_BIT, 1, 1);	
+	hix5hd2_write_bits(hdev, V0_VSP, V0_VSP_CH_EN_BIT, 1, 1);
+	value = ((src_h >> 16) << 12) / crtc_h;
+	hix5hd2_write_bits(hdev, V0_VSR, V0_VSR_VRATIO_START, V0_VSR_VRATIO_LEN, value);
+	hix5hd2_write_bits(hdev, V0_HSP, V0_HSP_L_EN_BIT, 1, 1);
+	hix5hd2_write_bits(hdev, V0_HSP, V0_HSP_CH_EN_BIT, 1, 1);
+	value = ((src_w >> 16) << 20) / crtc_w;
+	hix5hd2_write_bits(hdev, V0_HSP, V0_HSP_HRATIO_START, V0_HSP_HRATIO_LEN, value);
+
+	/* ADDR */
 	gem = drm_fb_cma_get_gem_obj(fb, 0);
-	hix5hd2_write_gfx_reg(hdev, index, G0_ADDR, gem->paddr);
-	hix5hd2_write_gfx_reg(hdev, index, G0_BK, 0x0);
-	hix5hd2_write_gfx_reg(hdev, index, G0_ALPHA, 0x0);
-	hix5hd2_write_gfx_reg(hdev, index, G0_CBMPARA, 0x11ff);
-	hix5hd2_write_gfx_reg(hdev, index, G0_CKEYMAX, 0x0);
-	hix5hd2_write_gfx_reg(hdev, index, G0_CKEYMIN, 0xff000000);
-	hix5hd2_write_gfx_reg(hdev, index, G0_CMASK, 0xffffffff);
+	hix5hd2_write_reg(hdev, V0_LADDR, gem->paddr + (src_y >> 16) * fb->pitches[0] + (src_x >> 16));
+	hix5hd2_write_bits(hdev, V0_STRIDE, V0_LSTRIDE_START, V0_STRIDE_LEN, fb->pitches[0]);
+	gem = drm_fb_cma_get_gem_obj(fb, 1);
+	hix5hd2_write_reg(hdev, V0_CADDR, gem->paddr + fb->offsets[1] + (src_y >> 16) / 2 * fb->pitches[1] + (src_x >> 16));
+	hix5hd2_write_bits(hdev, V0_STRIDE, V0_CSTRIDE_START, V0_STRIDE_LEN, fb->pitches[1]);
+	hix5hd2_write_reg(hdev, V0_UPD, 0x1);
 
-	hix5hd2_write_gp_reg(hdev, gp_index, GP0_CTRL, 0x80001230);
-	hix5hd2_write_gp_reg(hdev, gp_index, GP0_GALPHA, 0xFF);
-	hix5hd2_write_reg(hdev, MIXG0_BKG, 0x0);
-	hix5hd2_write_reg(hdev, MIXG0_BKALPHA, 0x0);
-	hix5hd2_write_reg(hdev, MIXG0_MIX, 0x4321);
-
-	hix5hd2_write_gp_bits(hdev, gp_index, GP0_IRESO, G0_IW_START, G0_IW_LEN, fb->width - 1);
-	hix5hd2_write_gp_bits(hdev, gp_index, GP0_IRESO, G0_IH_START, G0_IH_LEN, fb->height - 1);	
-	hix5hd2_write_gp_bits(hdev, gp_index, GP0_ORESO, G0_IW_START, G0_IW_LEN, fb->width - 1);
-	hix5hd2_write_gp_bits(hdev, gp_index, GP0_ORESO, G0_IH_START, G0_IH_LEN, fb->height - 1);	
-	hix5hd2_write_gp_reg(hdev, gp_index, GP0_DFPOS, 0);
-	hix5hd2_write_gp_bits(hdev, gp_index, GP0_DLPOS, G0_XPOS_START, G0_XPOS_LEN, fb->width - 1);
-	hix5hd2_write_gp_bits(hdev, gp_index, GP0_DLPOS, G0_YPOS_START, G0_YPOS_LEN, fb->height - 1);
-	hix5hd2_write_gp_bits(hdev, gp_index, GP0_VFPOS, G0_XPOS_START, G0_XPOS_LEN, crtc_x);
-	hix5hd2_write_gp_bits(hdev, gp_index, GP0_VFPOS, G0_YPOS_START, G0_YPOS_LEN, crtc_y);
-	hix5hd2_write_gp_bits(hdev, gp_index, GP0_VLPOS, G0_XPOS_START, G0_XPOS_LEN, crtc_x + crtc_w - 1);
-	hix5hd2_write_gp_bits(hdev, gp_index, GP0_VLPOS, G0_YPOS_START, G0_YPOS_LEN, crtc_y + crtc_h - 1);
-#if 0	
-	hix5hd2_write_gp_reg(hdev, gp_index, GP0_IRESO, 0x2cf4ff);
-	hix5hd2_write_gp_reg(hdev, gp_index, GP0_ORESO, 0x2cf4ff);
-	hix5hd2_write_gp_reg(hdev, gp_index, GP0_DFPOS, 0);
-	hix5hd2_write_gp_reg(hdev, gp_index, GP0_DLPOS, 0x2cf4ff);
-	hix5hd2_write_gp_reg(hdev, gp_index, GP0_VFPOS, 0);
-	hix5hd2_write_gp_reg(hdev, gp_index, GP0_VLPOS, 0x2cf4ff);
-#endif
-	hix5hd2_write_gp_reg(hdev, gp_index, GP0_CSC_IDC, 0x400000);
-	hix5hd2_write_gp_reg(hdev, gp_index, GP0_CSC_ODC, 0x100200);
-	hix5hd2_write_gp_reg(hdev, gp_index, GP0_CSC_IODC, 0x20000);
-	hix5hd2_write_gp_reg(hdev, gp_index, GP0_CSC_P0, 0x27500bc);
-	hix5hd2_write_gp_reg(hdev, gp_index, GP0_CSC_P1, 0x7f99003f);
-	hix5hd2_write_gp_reg(hdev, gp_index, GP0_CSC_P2, 0x1c27ea5);
-	hix5hd2_write_gp_reg(hdev, gp_index, GP0_CSC_P3, 0x7e6701c2);
-	hix5hd2_write_gp_reg(hdev, gp_index, GP0_CSC_P4, 0x7fd7);
-
-	hix5hd2_write_gfx_reg(hdev, index, G0_CTRL, 0x8c000368);
-	hix5hd2_write_gfx_reg(hdev, index, G0_UPD, 0x1);
-	hix5hd2_write_gp_reg(hdev, index, GP0_UPD, 0x1);
+	/* VP0 */
+	hix5hd2_write_reg(hdev, VP0_CTRL, 0xff);
+	hix5hd2_write_bits(hdev, VP0_IRESO, V0_RESO_WIDTH_START, V0_RESO_WIDTH_LEN, crtc->hwmode.hdisplay - 1);
+	hix5hd2_write_bits(hdev, VP0_IRESO, V0_RESO_HEIGHT_START, V0_RESO_HEIGHT_LEN, crtc->hwmode.vdisplay - 1);
+	hix5hd2_write_reg(hdev, VP0_DFPOS, 0);
+	hix5hd2_write_reg(hdev, VP0_VFPOS, 0);
+	hix5hd2_write_bits(hdev, VP0_DLPOS, V0_XPOS_START, V0_XPOS_LEN, crtc->hwmode.hdisplay - 1);
+	hix5hd2_write_bits(hdev, VP0_DLPOS, V0_YPOS_START, V0_YPOS_LEN, crtc->hwmode.vdisplay - 1);
+	hix5hd2_write_bits(hdev, VP0_VLPOS, V0_XPOS_START, V0_XPOS_LEN, crtc->hwmode.hdisplay - 1);
+	hix5hd2_write_bits(hdev, VP0_VLPOS, V0_YPOS_START, V0_YPOS_LEN, crtc->hwmode.vdisplay - 1);
+	hix5hd2_write_reg(hdev, VP0_UPD, 0x1);
 
 	return 0;
 }
@@ -132,12 +139,8 @@ static int hix5hd2_drm_plane_disable(struct drm_plane *plane)
 	struct hix5hd2_drm_plane *hplane = to_hix5hd2_plane(plane);
 	struct hix5hd2_drm_device *hdev = plane->dev->dev_private;
 
-	writel_relaxed(0x8c000368, hdev->base + G0_CTRL);
-	writel_relaxed(0x1, hdev->base + G0_UPD);
-#if 0
-	splane->format = NULL;
-	lcdc_write(sdev, LDBnBSIFR(splane->index), 0);
-#endif	
+	hix5hd2_write_bits(hdev, V0_CTRL, V0_ENABLE_BIT, 1, 0x0);
+	hix5hd2_write_reg(hdev, V0_UPD, 0x1);
 	return 0;
 }
 
@@ -153,50 +156,22 @@ static const struct drm_plane_funcs hix5hd2_drm_plane_funcs = {
 	.destroy = hix5hd2_drm_plane_destroy,
 };
 
-static const uint32_t hix5hd2_video_plane_formats[] = {
+static const uint32_t hix5hd2_video_formats[] = {
+	DRM_FORMAT_NV12,
 	DRM_FORMAT_NV21,
 };
 
-#if 0
-int hix5hd2_drm_plane_create(struct hix5hd2_drm_device *hdev,enum hix5hd2_drm_plane_id plane_id)
-{
-	struct hix5hd2_drm_plane *hplane;
-	int ret;
-
-	hplane = devm_kzalloc(hdev->ddev->dev, sizeof(*hplane), GFP_KERNEL);
-	if (hplane == NULL)
-		return -ENOMEM;
-
-	ret = drm_plane_init(hdev->ddev, &hplane->plane, 1,
-			     &hix5hd2_drm_plane_funcs, hix5hd2_plane_formats,
-			     ARRAY_SIZE(hix5hd2_plane_formats), false);
-
-	return ret;
-}
-#else
-#if 0
-static uint32_t hix5hd2_gfx_formats[] = {
-	DRM_FORMAT_ARGB1555,
-	DRM_FORMAT_ARGB8888,
-};
-#endif
 int hix5hd2_drm_plane_create(struct hix5hd2_drm_device *hdev)
 {
-//	struct drm_plane *primary = &hdev->gfx0.plane;
-	struct drm_plane *overlay = &hdev->video0.plane;
+	struct drm_plane *overlay = &hdev->dhd0.video.plane;
 	struct drm_crtc  *crtc = &hdev->dhd0.crtc;
 	int ret;
-#if 0
-	memset(primary,0,sizeof(*primary));
-	ret = drm_universal_plane_init(hdev->ddev, primary, 0, &drm_primary_helper_funcs,
-			     hix5hd2_gfx_formats, ARRAY_SIZE(hix5hd2_gfx_formats),
-			     DRM_PLANE_TYPE_PRIMARY);
-#endif	
+
+	hdev->dhd0.video.alpha = 255;
 	memset(overlay,0,sizeof(*overlay));
 	ret = drm_universal_plane_init(hdev->ddev, overlay, drm_crtc_mask(crtc), &hix5hd2_drm_plane_funcs, 
-				hix5hd2_video_plane_formats, ARRAY_SIZE(hix5hd2_video_plane_formats), 
+				hix5hd2_video_formats, ARRAY_SIZE(hix5hd2_video_formats), 
 				DRM_PLANE_TYPE_OVERLAY);
 	return ret;
 }
-#endif
 

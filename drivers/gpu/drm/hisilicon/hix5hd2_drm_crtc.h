@@ -20,6 +20,8 @@ struct hix5hd2_drm_device;
 
 struct hix5hd2_drm_crtc {
 	struct drm_crtc crtc;
+	struct hix5hd2_drm_plane gfx;
+	struct hix5hd2_drm_plane video;
 	struct drm_pending_vblank_event *event;
 	int dpms;
 	int index;
