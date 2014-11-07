@@ -455,7 +455,7 @@ static void hix5hd2_drm_encoder_destroy(struct drm_encoder *encoder)
 static const struct drm_encoder_funcs encoder_funcs = {
 	.destroy = hix5hd2_drm_encoder_destroy,
 };
-
+#if 0
 int hix5hd2_drm_encoder_create(struct hix5hd2_drm_device *hdev)
 {
 	struct drm_encoder *encoder = &hdev->hdate.encoder;
@@ -474,6 +474,9 @@ int hix5hd2_drm_encoder_create(struct hix5hd2_drm_device *hdev)
 
 	return 0;
 }
+#else
+
+#endif
 
 /* -----------------------------------------------------------------------------
  * Connector
@@ -559,7 +562,7 @@ static const struct drm_connector_funcs connector_funcs = {
 	.fill_modes = drm_helper_probe_single_connector_modes,
 	.destroy = hix5hd2_drm_connector_destroy,
 };
-
+#if 0
 int hix5hd2_drm_connector_create(struct hix5hd2_drm_device *hdev,
 			       struct drm_encoder *encoder)
 {
@@ -596,4 +599,38 @@ err_cleanup:
 	drm_connector_cleanup(connector);
 	return ret;
 }
+#else
+int hix5hd2_drm_ypbpr_init(struct hix5hd2_drm_device * hdev)
+{
+	struct drm_encoder *encoder = &hdev->hdate.encoder;
+	struct drm_connector *connector = &hdev->ypbyr.connector;
+	int encoder_type = DRM_MODE_ENCODER_DAC;
+	int connector_type = DRM_MODE_CONNECTOR_Component;
+	//hdev->encoder.dpms = DRM_MODE_DPMS_OFF;
+
+	encoder->possible_crtcs = 1;
+	drm_encoder_init(hdev->ddev, encoder, &encoder_funcs,encoder_type);
+	drm_encoder_helper_add(encoder, &encoder_helper_funcs);
+
+	drm_connector_init(hdev->ddev, connector, &connector_funcs,connector_type);
+	drm_connector_helper_add(connector, &connector_helper_funcs);
+	connector->interlace_allowed = 1;
+	drm_sysfs_connector_add(connector);
+
+	drm_mode_connector_attach_encoder(connector, encoder);
+	hdev->ypbyr.encoder = encoder;
+
+	drm_helper_connector_dpms(connector, DRM_MODE_DPMS_OFF);
+	drm_object_property_set_value(&connector->base,
+		hdev->ddev->mode_config.dpms_property, DRM_MODE_DPMS_OFF);
+	
+	return 0;
+}
+
+int hix5hd2_drm_hdmi_init(struct hix5hd2_drm_device * hdev)
+{
+	return 0;
+}
+
+#endif
 

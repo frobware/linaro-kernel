@@ -33,6 +33,7 @@ struct hix5hd2_drm_device {
 	struct hix5hd2_drm_crtc dhd0;
 	struct hix5hd2_drm_encoder hdate;
 	struct hix5hd2_drm_connector ypbyr;
+	struct hix5hd2_drm_encoder tmds;
 	struct hix5hd2_drm_connector hdmi;	
 };
 

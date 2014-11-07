@@ -110,9 +110,13 @@ int hix5hd2_drm_modeset_init(struct hix5hd2_drm_device *hdev)
 #if 1
 	hix5hd2_drm_crtc_create(hdev);
 	hix5hd2_drm_plane_create(hdev);
+#if 0	
 	hix5hd2_drm_encoder_create(hdev);
 	hix5hd2_drm_connector_create(hdev, &hdev->hdate.encoder);
-
+#else
+	hix5hd2_drm_ypbpr_init(hdev);
+	hix5hd2_drm_hdmi_init(hdev);
+#endif
 	drm_kms_helper_poll_init(hdev->ddev);
 
 	hdev->ddev->mode_config.min_width = 0;

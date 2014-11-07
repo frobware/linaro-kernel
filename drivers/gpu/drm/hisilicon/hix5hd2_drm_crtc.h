@@ -53,8 +53,13 @@ struct hix5hd2_display_timing {
 };
 
 int hix5hd2_drm_crtc_create(struct hix5hd2_drm_device *hdev);
+#if 0
 int hix5hd2_drm_encoder_create(struct hix5hd2_drm_device * hdev);
 int hix5hd2_drm_connector_create(struct hix5hd2_drm_device * hdev,struct drm_encoder * encoder);
+#else
+int hix5hd2_drm_ypbpr_init(struct hix5hd2_drm_device * hdev);
+int hix5hd2_drm_hdmi_init(struct hix5hd2_drm_device * hdev);
+#endif
 int hix5hd2_drm_crtc_enable_vblank(struct drm_device *dev, int crtc);
 void hix5hd2_drm_crtc_disable_vblank(struct drm_device *dev, int crtc);
 void hix5hd2_drm_crtc_finish_page_flip(struct hix5hd2_drm_crtc *hcrtc);
