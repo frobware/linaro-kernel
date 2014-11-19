@@ -52,6 +52,14 @@ struct hix5hd2_display_timing {
 	u32  hmid;
 };
 
+struct hix5hd2_hdmi {
+	void __iomem *base;
+	struct clk *clk;
+	struct hix5hd2_drm_encoder tmds;
+	struct hix5hd2_drm_connector hdmi;
+	struct i2c_adapter ddc;
+};
+
 int hix5hd2_drm_crtc_create(struct hix5hd2_drm_device *hdev);
 #if 0
 int hix5hd2_drm_encoder_create(struct hix5hd2_drm_device * hdev);
