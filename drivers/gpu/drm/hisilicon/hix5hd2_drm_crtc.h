@@ -52,12 +52,37 @@ struct hix5hd2_display_timing {
 	u32  hmid;
 };
 
+enum hix5hd2_output_type{
+	HIX5HD2_OUTPUT_COMPONENT,
+	HIX5HD2_OUTPUT_HDMI,
+};
+
+struct hix5hd2_drm_output_ops{
+	void (*dpms)(struct drm_encoder *encoder, int mode);
+	void (*mode_set)(struct drm_encoder *encoder,
+			 struct drm_display_mode *mode,
+			 struct drm_display_mode *adjusted_mode);
+	enum drm_connector_status (*detect)(struct drm_connector *connector,
+					    bool force);
+	int (*get_modes)(struct drm_connector *connector);
+};
+
+struct hix5hd2_drm_output{
+	enum hix5hd2_output_type type;	
+	struct hix5hd2_drm_encoder encoder;
+	struct hix5hd2_drm_connector connector;
+	struct hix5hd2_drm_output_ops *ops;
+};
+
+struct hix5hd2_component {
+	struct hix5hd2_drm_output output;
+};
+
 struct hix5hd2_hdmi {
 	void __iomem *base;
 	struct clk *clk;
-	struct hix5hd2_drm_encoder tmds;
-	struct hix5hd2_drm_connector hdmi;
 	struct i2c_adapter ddc;
+	struct hix5hd2_drm_output output;
 };
 
 int hix5hd2_drm_crtc_create(struct hix5hd2_drm_device *hdev);
@@ -65,7 +90,8 @@ int hix5hd2_drm_crtc_create(struct hix5hd2_drm_device *hdev);
 int hix5hd2_drm_encoder_create(struct hix5hd2_drm_device * hdev);
 int hix5hd2_drm_connector_create(struct hix5hd2_drm_device * hdev,struct drm_encoder * encoder);
 #else
-int hix5hd2_drm_ypbpr_init(struct hix5hd2_drm_device * hdev);
+int hix5hd2_drm_output_init(struct hix5hd2_drm_device * hdev, struct hix5hd2_drm_output *output);
+int hix5hd2_drm_component_init(struct hix5hd2_drm_device * hdev);
 int hix5hd2_drm_hdmi_init(struct hix5hd2_drm_device * hdev);
 #endif
 int hix5hd2_drm_crtc_enable_vblank(struct drm_device *dev, int crtc);

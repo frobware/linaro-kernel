@@ -97,5 +97,20 @@
 #define AVI_CHSUM	0x43
 #define AVI_DBYTE1	0x44
 
+#define hix5hd2_hdmi_page0_reg(hdmi, reg)  	(hdmi->base + (reg << 2))
+#define hix5hd2_hdmi_page1_reg(hdmi, reg)  	(hdmi->base + 0x400 + (reg << 2))
+#define hix5hd2_hdmi_phy_reg(hdmi, reg)  	(hdmi->base + 0x1800 + (reg << 2))
+
+#define hix5hd2_hdmi_write_page0(hdmi, reg, val) \
+	writel_relaxed(val, hix5hd2_hdmi_page0_reg(hdmi, reg))
+#define hix5hd2_hdmi_write_page1(hdmi, reg, val) \
+	writel_relaxed(val, hix5hd2_hdmi_page1_reg(hdmi, reg))
+#define hix5hd2_hdmi_write_phy(hdmi, reg, val) \
+	writel_relaxed(val, hix5hd2_hdmi_phy_reg(hdmi, reg))
+#define hix5hd2_hdmi_read_page0(hdmi, reg) \
+	readl_relaxed(hix5hd2_hdmi_page0_reg(hdmi, reg))
+#define hix5hd2_hdmi_read_page1(hdmi, reg) \
+	readl_relaxed(hix5hd2_hdmi_page0_reg(hdmi, reg))
+
 
 #endif

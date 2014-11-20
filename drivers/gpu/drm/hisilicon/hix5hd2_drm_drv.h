@@ -27,12 +27,9 @@ struct hix5hd2_drm_device {
 //	struct device *dev;
 	void __iomem *base;
 	struct clk *clk;
-
 	struct drm_device *ddev;
-
 	struct hix5hd2_drm_crtc dhd0;
-	struct hix5hd2_drm_encoder hdate;
-	struct hix5hd2_drm_connector ypbyr;
+	struct hix5hd2_component component;
 	struct hix5hd2_hdmi hdmi;
 };
 

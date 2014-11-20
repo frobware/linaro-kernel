@@ -114,7 +114,7 @@ int hix5hd2_drm_modeset_init(struct hix5hd2_drm_device *hdev)
 	hix5hd2_drm_encoder_create(hdev);
 	hix5hd2_drm_connector_create(hdev, &hdev->hdate.encoder);
 #else
-	hix5hd2_drm_ypbpr_init(hdev);
+	hix5hd2_drm_component_init(hdev);
 	hix5hd2_drm_hdmi_init(hdev);
 #endif
 	drm_kms_helper_poll_init(hdev->ddev);
