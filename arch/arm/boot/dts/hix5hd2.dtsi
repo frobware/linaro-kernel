@@ -447,6 +447,18 @@
                         clocks = <&clock HIX5HD2_SATA_CLK>;
 		};
 
+		drm@f8cc0000 {
+			compatible = "hisilicon,hix5hd2-drm";
+			reg = <0xf8cc0000 0x10000>;
+			interrupts = <0 90 4>;
+		};
+
+		hdmi@f8ce0000 {
+			compatible = "hisilicon,hix5hd2-hdmi";
+			reg = <0xf8ce0000 0x10000>;
+			interrupts = <0 88 4>;
+		};
+
 		sctrl@f8000000 {
 			compatible = "hisilicon,sctrl";
 			reg = <0xf8000000 0x1000>;
