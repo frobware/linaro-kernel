@@ -21,51 +21,8 @@
 
 #include "hix5hd2_drm_crtc.h"
 #include "hix5hd2_drm_drv.h"
-#include "hix5hd2_drm_plane.h"
 #include "hix5hd2_drm_regs.h"
 #include "hix5hd2_drm_hdmi.h"
-
-#define HIX5HD2_HDMI_IO_START	0xF8CE0000
-#define HIX5HD2_HDMI_IO_SIZE	0x10000
-#define HIX5HD2_HDMI_IRQ	(88 + 32)
-
-static u8 hdmi_edid[] = {
-0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00, 0x2d, 0xe1, 0x30, 0x00, 0x01, 0x00, 0x00, 0x00, 
-0x01, 0x12, 0x01, 0x03, 0x80, 0x73, 0x41, 0x78, 0x0a, 0xcf, 0x74, 0xa3, 0x57, 0x4c, 0xb0, 0x23, 
-0x09, 0x48, 0x4c, 0x21, 0x08, 0x00, 0x8b, 0x00, 0x81, 0xc0, 0x61, 0x40, 0x81, 0x80, 0x01, 0x01, 
-0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x1d, 0x00, 0x72, 0x51, 0xd0, 0x1e, 0x20, 0x6e, 0x28, 
-0x55, 0x00, 0xc4, 0x8e, 0x21, 0x00, 0x00, 0x1e, 0x01, 0x1d, 0x80, 0x18, 0x71, 0x1c, 0x16, 0x20, 
-0x58, 0x2c, 0x25, 0x00, 0xc4, 0x8e, 0x21, 0x00, 0x00, 0x9e, 0x00, 0x00, 0x00, 0xfc, 0x00, 0x4b, 
-0x4f, 0x4e, 0x4b, 0x41, 0x20, 0x4c, 0x43, 0x44, 0x54, 0x56, 0x0a, 0x20, 0x00, 0x00, 0x00, 0xfd, 
-0x00, 0x16, 0x50, 0x0e, 0x5b, 0x10, 0x00, 0x0a, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x01, 0xe6, 
-0x02, 0x03, 0x22, 0xf2, 0x4d, 0x01, 0x02, 0x03, 0x84, 0x05, 0x07, 0x10, 0x12, 0x93, 0x14, 0x16, 
-0x1f, 0x20, 0x23, 0x09, 0x7f, 0x07, 0x83, 0x01, 0x00, 0x00, 0x67, 0x03, 0x0c, 0x00, 0x10, 0x00, 
-0x38, 0x29, 0x8c, 0x0a, 0xd0, 0x8a, 0x20, 0xe0, 0x2d, 0x10, 0x10, 0x3e, 0x96, 0x00, 0xc4, 0x8e, 
-0x21, 0x00, 0x00, 0x18, 0x8c, 0x0a, 0xd0, 0x90, 0x20, 0x40, 0x31, 0x20, 0x0c, 0x40, 0x55, 0x00, 
-0xc4, 0x8e, 0x21, 0x00, 0x00, 0x18, 0x01, 0x1d, 0x00, 0xbc, 0x52, 0xd0, 0x1e, 0x20, 0xb8, 0x28, 
-0x55, 0x40, 0xc4, 0x8e, 0x21, 0x00, 0x00, 0x1e, 0x01, 0x1d, 0x80, 0xd0, 0x72, 0x1c, 0x16, 0x20, 
-0x10, 0x2c, 0x25, 0x80, 0xc4, 0x8e, 0x21, 0x00, 0x00, 0x9e, 0x8c, 0x0a, 0xd0, 0x8a, 0x20, 0xe0, 
-0x2d, 0x10, 0x10, 0x3e, 0x96, 0x00, 0x13, 0x8e, 0x21, 0x00, 0x00, 0x18, 0x00, 0x00, 0x00, 0x0b};
-
-static struct resource hix5hd2_hdmi_res[] = {
-	{
-		.start	= HIX5HD2_HDMI_IO_START,
-		.end	= HIX5HD2_HDMI_IO_START + HIX5HD2_HDMI_IO_SIZE,
-		.flags	= IORESOURCE_MEM,
-	},
-	{
-		.start	= HIX5HD2_HDMI_IRQ,
-		.end	= HIX5HD2_HDMI_IRQ,
-		.flags	= IORESOURCE_IRQ,
-	},
-};
-
-static struct platform_device hix5hd2_hdmi_platform_dev = {
-	.name		= "hix5hd2-hdmi",
-	.id		= -1,
-	.resource	= hix5hd2_hdmi_res,
-	.num_resources	= ARRAY_SIZE(hix5hd2_hdmi_res),
-};
 
 #define RETRY_TIMES 20
 #define HIX5HD2_HDMI_DDC_ADDR 0xA0
@@ -79,7 +36,7 @@ int hix5hd2_hdmi_ddc_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,int num
 	u32 offset = 0;
 	u32 segment = 0;
 	u16 total,cnt;
-	int i,j;
+	int i;
 
 	for(i = 0; i < num; i++) {
 		struct i2c_msg msg = msgs[i];
@@ -231,34 +188,6 @@ void hix5hd2_hdmi_reset(struct hix5hd2_hdmi *hdmi)
 	hix5hd2_hdmi_write_page0(hdmi, SRST, 0x0);	
 }
 
-
-int hix5hd2_hdmi_probe(struct hix5hd2_hdmi *hdmi)
-{
-	struct platform_device *pdev = &hix5hd2_hdmi_platform_dev;
-	struct resource *res;
-
-	platform_device_register(pdev);
-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-	hdmi->base = devm_ioremap_resource(&(pdev->dev), res);
-	if (IS_ERR(hdmi->base)) {
-		return PTR_ERR(hdmi->base);
-	}
-
-	hix5hd2_hdmi_ddc_setup(hdmi);
-	hix5hd2_hdmi_clk_setup(hdmi);
-	hix5hd2_hdmi_reset(hdmi);
-	hix5hd2_hdmi_phy_setup(hdmi);
-	hix5hd2_hdmi_write_page0(hdmi, SYS_CTRL1, 0x35);
-	/*interrupt*/
-	hix5hd2_hdmi_write_page0(hdmi, INT_CTRL, 0x2);
-	hix5hd2_hdmi_write_page0(hdmi, INTR1, 0x78);
-	hix5hd2_hdmi_write_page0(hdmi, INT_UNMASK1, 0x78);
-
-	hix5hd2_hdmi_write_page1(hdmi, AUDP_TXCTRL, 0x21);
-	return 0;
-}
-
-
 void hix5hd2_drm_hdmi_dpms(struct drm_encoder *encoder, int mode)
 {
 	
@@ -298,8 +227,8 @@ void hix5hd2_drm_hdmi_mode_set(struct drm_encoder *encoder,
 			 struct drm_display_mode *adjusted_mode)
 {
 	struct hix5hd2_drm_encoder *henc = container_of(encoder, struct hix5hd2_drm_encoder, encoder);
-	struct hix5hd2_drm_output *output = container_of(henc, struct hix5hd2_drm_output, encoder);
-	struct hix5hd2_hdmi *hdmi = container_of(output, struct hix5hd2_hdmi, output);
+	struct hix5hd2_drm_display *display = container_of(henc, struct hix5hd2_drm_display, encoder);
+	struct hix5hd2_hdmi *hdmi = container_of(display, struct hix5hd2_hdmi, display);
 
 	hix5hd2_hdmi_setup_avi_infoframe(hdmi, adjusted_mode);
 	return;
@@ -309,8 +238,8 @@ enum drm_connector_status
 hix5hd2_drm_hdmi_detect(struct drm_connector *connector, bool force)
 {
 	struct hix5hd2_drm_connector *hcon = container_of(connector, struct hix5hd2_drm_connector, connector);
-	struct hix5hd2_drm_output *output = container_of(hcon, struct hix5hd2_drm_output, connector);
-	struct hix5hd2_hdmi *hdmi = container_of(output, struct hix5hd2_hdmi, output);
+	struct hix5hd2_drm_display *display = container_of(hcon, struct hix5hd2_drm_display, connector);
+	struct hix5hd2_hdmi *hdmi = container_of(display, struct hix5hd2_hdmi, display);
 	u32 val;
 
 	val = hix5hd2_hdmi_read_page0(hdmi, SYS_STAT);
@@ -320,8 +249,8 @@ hix5hd2_drm_hdmi_detect(struct drm_connector *connector, bool force)
 static int hix5hd2_drm_hdmi_get_modes(struct drm_connector *connector)
 {
 	struct hix5hd2_drm_connector *hcon = container_of(connector, struct hix5hd2_drm_connector, connector);
-	struct hix5hd2_drm_output *output = container_of(hcon, struct hix5hd2_drm_output, connector);
-	struct hix5hd2_hdmi *hdmi = container_of(output, struct hix5hd2_hdmi, output);
+	struct hix5hd2_drm_display *display = container_of(hcon, struct hix5hd2_drm_display, connector);
+	struct hix5hd2_hdmi *hdmi = container_of(display, struct hix5hd2_hdmi, display);
 	struct edid *edid;
 
 	edid = drm_get_edid(connector, &(hdmi->ddc));
@@ -329,23 +258,69 @@ static int hix5hd2_drm_hdmi_get_modes(struct drm_connector *connector)
 	return drm_add_edid_modes(connector, edid);
 }
 
-struct hix5hd2_drm_output_ops hix5hd2_hdmi_ops = {
+struct hix5hd2_drm_display_ops hix5hd2_hdmi_ops = {
 	.dpms = hix5hd2_drm_hdmi_dpms,
 	.mode_set = hix5hd2_drm_hdmi_mode_set,
 	.detect = hix5hd2_drm_hdmi_detect,
 	.get_modes = hix5hd2_drm_hdmi_get_modes,
 };
 
-
-int hix5hd2_drm_hdmi_init(struct hix5hd2_drm_device * hdev)
+int hix5hd2_hdmi_probe(struct platform_device *pdev)
 {
-	struct hix5hd2_drm_output *output = &hdev->hdmi.output;
+	struct hix5hd2_hdmi *hdmi = NULL;
+	struct resource *res;
+	struct hix5hd2_drm_display *display = NULL;
 
-	hix5hd2_hdmi_probe(&hdev->hdmi);
+	hdmi = devm_kzalloc(&pdev->dev, sizeof(*hdmi), GFP_KERNEL);
+	if (!hdmi)
+		return -ENOMEM;
 	
-	output->type = HIX5HD2_OUTPUT_HDMI;
-	output->ops = &hix5hd2_hdmi_ops;
-	hix5hd2_drm_output_init(hdev, output);
+	hdmi->dev = &pdev->dev;
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	hdmi->base = devm_ioremap_resource(&(pdev->dev), res);
+	if (IS_ERR(hdmi->base)) {
+		return PTR_ERR(hdmi->base);
+	}
+
+	hix5hd2_hdmi_ddc_setup(hdmi);
+	hix5hd2_hdmi_clk_setup(hdmi);
+	hix5hd2_hdmi_reset(hdmi);
+	hix5hd2_hdmi_phy_setup(hdmi);
+	hix5hd2_hdmi_write_page0(hdmi, SYS_CTRL1, 0x35);
+	/*interrupt*/
+	hix5hd2_hdmi_write_page0(hdmi, INT_CTRL, 0x2);
+	hix5hd2_hdmi_write_page0(hdmi, INTR1, 0x78);
+	hix5hd2_hdmi_write_page0(hdmi, INT_UNMASK1, 0x78);
+
+	hix5hd2_hdmi_write_page1(hdmi, AUDP_TXCTRL, 0x21);
+
+	display = &hdmi->display;
+	INIT_LIST_HEAD(&display->list);
+	display->type = HIX5HD2_DISPLAY_HDMI;
+	display->ops = &hix5hd2_hdmi_ops;
+	hix5hd2_drm_display_register(display);
 	return 0;
 }
 
+int hix5hd2_hdmi_remove(struct platform_device *pdev)
+{
+	return 0;
+}
+
+static const struct of_device_id hisilicon_hdmi_dt_match[] = {
+	{.compatible = "hisilicon,hix5hd2-hdmi"},
+	{},
+};
+MODULE_DEVICE_TABLE(of, hisilicon_hdmi_dt_match);
+
+struct platform_driver hix5hd2_hdmi_driver = {
+	.probe = hix5hd2_hdmi_probe,
+	.remove = hix5hd2_hdmi_remove,
+	.driver = {
+		.owner = THIS_MODULE,
+		.name = "hisilicon-hdmi",
+		.of_match_table = hisilicon_hdmi_dt_match,
+	},
+};
+
+module_platform_driver(hix5hd2_hdmi_driver);

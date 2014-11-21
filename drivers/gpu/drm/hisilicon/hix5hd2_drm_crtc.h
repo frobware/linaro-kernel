@@ -52,12 +52,12 @@ struct hix5hd2_display_timing {
 	u32  hmid;
 };
 
-enum hix5hd2_output_type{
-	HIX5HD2_OUTPUT_COMPONENT,
-	HIX5HD2_OUTPUT_HDMI,
+enum hix5hd2_display_type{
+	HIX5HD2_DISPLAY_COMPONENT,
+	HIX5HD2_DISPLAY_HDMI,
 };
 
-struct hix5hd2_drm_output_ops{
+struct hix5hd2_drm_display_ops{
 	void (*dpms)(struct drm_encoder *encoder, int mode);
 	void (*mode_set)(struct drm_encoder *encoder,
 			 struct drm_display_mode *mode,
@@ -67,37 +67,32 @@ struct hix5hd2_drm_output_ops{
 	int (*get_modes)(struct drm_connector *connector);
 };
 
-struct hix5hd2_drm_output{
-	enum hix5hd2_output_type type;	
+struct hix5hd2_drm_display{
+	struct list_head list;
+	enum hix5hd2_display_type type;	
 	struct hix5hd2_drm_encoder encoder;
 	struct hix5hd2_drm_connector connector;
-	struct hix5hd2_drm_output_ops *ops;
+	struct hix5hd2_drm_display_ops *ops;
 };
-
+#if 0
 struct hix5hd2_component {
-	struct hix5hd2_drm_output output;
+	struct hix5hd2_drm_display display;
 };
-
+#endif
 struct hix5hd2_hdmi {
 	void __iomem *base;
 	struct clk *clk;
+	struct device *dev;
 	struct i2c_adapter ddc;
-	struct hix5hd2_drm_output output;
+	struct hix5hd2_drm_display display;
 };
 
 int hix5hd2_drm_crtc_create(struct hix5hd2_drm_device *hdev);
-#if 0
-int hix5hd2_drm_encoder_create(struct hix5hd2_drm_device * hdev);
-int hix5hd2_drm_connector_create(struct hix5hd2_drm_device * hdev,struct drm_encoder * encoder);
-#else
-int hix5hd2_drm_output_init(struct hix5hd2_drm_device * hdev, struct hix5hd2_drm_output *output);
-int hix5hd2_drm_component_init(struct hix5hd2_drm_device * hdev);
-int hix5hd2_drm_hdmi_init(struct hix5hd2_drm_device * hdev);
-#endif
 int hix5hd2_drm_crtc_enable_vblank(struct drm_device *dev, int crtc);
 void hix5hd2_drm_crtc_disable_vblank(struct drm_device *dev, int crtc);
 void hix5hd2_drm_crtc_finish_page_flip(struct hix5hd2_drm_crtc *hcrtc);
-
-
+int hix5hd2_drm_display_init(struct hix5hd2_drm_device * hdev);
+int hix5hd2_drm_display_register(struct hix5hd2_drm_display *display);
+int hix5hd2_drm_display_unregister(struct hix5hd2_drm_display *display);
 
 #endif /* __HIX5HD2_DRM_CRTC_H__ */

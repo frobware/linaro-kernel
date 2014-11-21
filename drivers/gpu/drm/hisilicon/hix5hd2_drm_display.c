@@ -1,5 +1,5 @@
 /*
- * hix5hd2_drm_crtc.c  --  Hisilicon hix5hd2 DRM CRTCs
+ * hix5hd2_drm_display.c  --  Hisilicon hix5hd2 DRM Display
  *
  * Copyright (C) 2014 Hisilicon Corporation
  *
@@ -34,10 +34,10 @@
 static void hix5hd2_drm_encoder_dpms(struct drm_encoder *encoder, int mode)
 {
 	struct hix5hd2_drm_encoder *henc = container_of(encoder, struct hix5hd2_drm_encoder, encoder);
-	struct hix5hd2_drm_output *output = container_of(henc, struct hix5hd2_drm_output, encoder);
+	struct hix5hd2_drm_display *display = container_of(henc, struct hix5hd2_drm_display, encoder);
 
-	if(output->ops && output->ops->dpms) 
-		return output->ops->dpms(encoder, mode);
+	if(display->ops && display->ops->dpms) 
+		return display->ops->dpms(encoder, mode);
 }
 
 static bool hix5hd2_drm_encoder_mode_fixup(struct drm_encoder *encoder,
@@ -45,8 +45,8 @@ static bool hix5hd2_drm_encoder_mode_fixup(struct drm_encoder *encoder,
 					 struct drm_display_mode *adjusted_mode)
 {
 	struct hix5hd2_drm_encoder *henc = container_of(encoder, struct hix5hd2_drm_encoder, encoder);
-	struct hix5hd2_drm_output *output = container_of(henc, struct hix5hd2_drm_output, encoder);
-	struct drm_connector *connector = &output->connector.connector;
+	struct hix5hd2_drm_display *display = container_of(henc, struct hix5hd2_drm_display, encoder);
+	struct drm_connector *connector = &display->connector.connector;
 
 	if (list_empty(&connector->modes)) {
 		return false;
@@ -65,10 +65,10 @@ static void hix5hd2_drm_encoder_mode_set(struct drm_encoder *encoder,
 				       struct drm_display_mode *adjusted_mode)
 {
 	struct hix5hd2_drm_encoder *henc = container_of(encoder, struct hix5hd2_drm_encoder, encoder);
-	struct hix5hd2_drm_output *output = container_of(henc, struct hix5hd2_drm_output, encoder);
+	struct hix5hd2_drm_display *display = container_of(henc, struct hix5hd2_drm_display, encoder);
 
-	if(output->ops && output->ops->mode_set) 
-		return output->ops->mode_set(encoder, mode, adjusted_mode);
+	if(display->ops && display->ops->mode_set) 
+		return display->ops->mode_set(encoder, mode, adjusted_mode);
 }
 
 static void hix5hd2_drm_encoder_mode_commit(struct drm_encoder *encoder)
@@ -103,10 +103,10 @@ static const struct drm_encoder_funcs hix5hd2_encoder_funcs = {
 static int hix5hd2_drm_connector_get_modes(struct drm_connector *connector)
 {
 	struct hix5hd2_drm_connector *hcon = container_of(connector, struct hix5hd2_drm_connector, connector);
-	struct hix5hd2_drm_output *output = container_of(hcon, struct hix5hd2_drm_output, connector);
+	struct hix5hd2_drm_display *display = container_of(hcon, struct hix5hd2_drm_display, connector);
 
-	if(output->ops && output->ops->get_modes) {
-		return output->ops->get_modes(connector);
+	if(display->ops && display->ops->get_modes) {
+		return display->ops->get_modes(connector);
 	}
 	
 	return -EINVAL;
@@ -122,7 +122,6 @@ static struct drm_encoder *
 hix5hd2_drm_connector_best_encoder(struct drm_connector *connector)
 {
 	struct hix5hd2_drm_connector *hcon = to_hix5hd2_connector(connector);
-	printk("%s %d encoder:%#x\n",__FUNCTION__,__LINE__,connector->encoder);
 	return hcon->encoder;
 }
 
@@ -142,10 +141,10 @@ static enum drm_connector_status
 hix5hd2_drm_connector_detect(struct drm_connector *connector, bool force)
 {
 	struct hix5hd2_drm_connector *hcon = container_of(connector, struct hix5hd2_drm_connector, connector);
-	struct hix5hd2_drm_output *output = container_of(hcon, struct hix5hd2_drm_output, connector);
+	struct hix5hd2_drm_display *display = container_of(hcon, struct hix5hd2_drm_display, connector);
 
-	if(output->ops && output->ops->detect) {
-		return output->ops->detect(connector,force);
+	if(display->ops && display->ops->detect) {
+		return display->ops->detect(connector,force);
 	}
 	
 	return -EINVAL;
@@ -158,19 +157,19 @@ static const struct drm_connector_funcs hix5hd2_connector_funcs = {
 	.destroy = hix5hd2_drm_connector_destroy,
 };
 
-int hix5hd2_drm_output_init(struct hix5hd2_drm_device * hdev, struct hix5hd2_drm_output *output)
+int hix5hd2_drm_display_create(struct drm_device *dev, struct hix5hd2_drm_display *display)
 {
-	struct drm_encoder *encoder = &output->encoder.encoder;
-	struct drm_connector *connector = &output->connector.connector;
+	struct drm_encoder *encoder = &display->encoder.encoder;
+	struct drm_connector *connector = &display->connector.connector;
 	int connector_type, encoder_type;
 
-	switch (output->type) {
-	case HIX5HD2_OUTPUT_COMPONENT:
+	switch (display->type) {
+	case HIX5HD2_DISPLAY_COMPONENT:
 		connector_type = DRM_MODE_CONNECTOR_Component;
 		encoder_type = DRM_MODE_ENCODER_DAC;
 		break;
-
-	case HIX5HD2_OUTPUT_HDMI:
+	
+	case HIX5HD2_DISPLAY_HDMI:
 		connector_type = DRM_MODE_CONNECTOR_HDMIA;
 		encoder_type = DRM_MODE_ENCODER_TMDS;
 		break;
@@ -181,22 +180,46 @@ int hix5hd2_drm_output_init(struct hix5hd2_drm_device * hdev, struct hix5hd2_drm
 		break;
 	}
 
+	printk("%s %d\n",__FUNCTION__,__LINE__);	
 	encoder->possible_crtcs = 1;
-	drm_encoder_init(hdev->ddev, encoder, &hix5hd2_encoder_funcs,encoder_type);
+	drm_encoder_init(dev, encoder, &hix5hd2_encoder_funcs,encoder_type);
 	drm_encoder_helper_add(encoder, &hix5hd2_encoder_helper_funcs);
-
-	drm_connector_init(hdev->ddev, connector, &hix5hd2_connector_funcs,connector_type);
+	
+	drm_connector_init(dev, connector, &hix5hd2_connector_funcs,connector_type);
 	drm_connector_helper_add(connector, &hix5hd2_connector_helper_funcs);
 	connector->interlace_allowed = 1;
 	drm_sysfs_connector_add(connector);
-
+	
 	drm_mode_connector_attach_encoder(connector, encoder);
-	output->connector.encoder = encoder;
-
+	display->connector.encoder = encoder;
+	
 	drm_helper_connector_dpms(connector, DRM_MODE_DPMS_OFF);
 	drm_object_property_set_value(&connector->base,
-		hdev->ddev->mode_config.dpms_property, DRM_MODE_DPMS_OFF);
+		dev->mode_config.dpms_property, DRM_MODE_DPMS_OFF);
 
+	return 0;
+}
+
+int hix5hd2_drm_display_init(struct hix5hd2_drm_device * hdev)
+{
+	struct hix5hd2_drm_display *display;
+	
+	list_for_each_entry(display,&hdev->display,list) {
+		hix5hd2_drm_display_create(hdev->ddev, display);
+	}
+
+	return 0;
+}
+
+int hix5hd2_drm_display_register(struct hix5hd2_drm_display *display)
+{
+	list_add_tail(&display->list, &hix5hd2_drm.display);
+	return 0;
+}
+
+int hix5hd2_drm_display_unregister(struct hix5hd2_drm_display *display)
+{
+	list_del(&display->list);
 	return 0;
 }
 
