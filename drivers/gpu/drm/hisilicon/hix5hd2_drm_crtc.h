@@ -82,6 +82,7 @@ struct hix5hd2_component {
 struct hix5hd2_hdmi {
 	void __iomem *base;
 	struct clk *clk;
+	struct phy *phy;
 	struct device *dev;
 	struct i2c_adapter ddc;
 	struct hix5hd2_drm_display display;

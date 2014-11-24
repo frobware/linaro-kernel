@@ -94,7 +94,7 @@ static int hix5hd2_drm_unload(struct drm_device *dev)
 
 static int hix5hd2_drm_clk_setup(struct hix5hd2_drm_device *hdev)
 {
-#if 0
+#if 1
 	clk_prepare_enable(hdev->clk);
 #else
 	#define HIX5HD2_CRG_BASE 0xf8a22000
@@ -347,9 +347,9 @@ static int hix5hd2_drm_probe(struct platform_device *pdev)
 		ret = PTR_ERR(hdev->base);
 		return ret;
 	}
-#if 0
-	hdev->clk = devm_get_clk
-#endif	
+
+	hdev->clk = devm_clk_get(&pdev->dev, NULL);
+
 	platform_set_drvdata(pdev,hdev);	
 
 	ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));

@@ -451,12 +451,14 @@
 			compatible = "hisilicon,hix5hd2-drm";
 			reg = <0xf8cc0000 0x10000>;
 			interrupts = <0 90 4>;
+			clocks = <&clock HIX5HD2_VDP_CLK>;
 		};
 
 		hdmi@f8ce0000 {
 			compatible = "hisilicon,hix5hd2-hdmi";
 			reg = <0xf8ce0000 0x10000>;
 			interrupts = <0 88 4>;
+			clocks = <&clock HIX5HD2_HDMITX_CLK>;
 		};
 
 		sctrl@f8000000 {

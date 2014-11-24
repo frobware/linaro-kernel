@@ -129,6 +129,7 @@ struct hix5hd2_clk_complex {
 	void __iomem	*phy_reg;
 	u32		phy_clk_mask;
 	u32		phy_rst_mask;
+	enum hix5hd2_clk_type type;
 };
 
 static struct hix5hd2_complex_clock hix5hd2_complex_clks[] __initdata = {
@@ -140,6 +141,10 @@ static struct hix5hd2_complex_clock hix5hd2_complex_clks[] __initdata = {
 		0xa8, 0x1f, 0x300, 0xac, 0x1, 0x0, TYPE_COMPLEX},
 	{"clk_usb", NULL, HIX5HD2_USB_CLK,
 		0xb8, 0xff, 0x3f000, 0xbc, 0x7, 0x3f00, TYPE_COMPLEX},
+	{"clk_vdp", NULL, HIX5HD2_VDP_CLK,
+		0xd8, 0x7ff, 0x40000000, 0x11c, 0x3, 0xf0, TYPE_COMPLEX},
+	{"clk_hdmitx", NULL, HIX5HD2_HDMITX_CLK,
+		0x10c, 0x3f, 0x300, 0x110, 0x1, 0x10, TYPE_COMPLEX},		
 };
 
 #define to_complex_clk(_hw) container_of(_hw, struct hix5hd2_clk_complex, hw)
@@ -250,7 +255,7 @@ void __init hix5hd2_clk_register_complex_clk(struct hix5hd2_complex_clock *clks,
 		init.name = clks[i].name;
 		if (clks[i].type == TYPE_ETHER)
 			init.ops = &clk_ether_ops;
-		else
+		else 
 			init.ops = &clk_complex_ops;
 
 		init.flags = CLK_IS_BASIC;

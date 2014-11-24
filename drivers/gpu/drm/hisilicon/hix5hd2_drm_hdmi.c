@@ -157,7 +157,7 @@ void hix5hd2_hdmi_ddc_setup(struct hix5hd2_hdmi *hdmi)
 		
 void hix5hd2_hdmi_clk_setup(struct hix5hd2_hdmi *hdmi)
 {
-#if 0
+#if 1
 	clk_prepare_enable(hdmi->clk);
 #else
 #define HIX5HD2_CRG_BASE 0xf8a22000
@@ -168,18 +168,40 @@ void hix5hd2_hdmi_clk_setup(struct hix5hd2_hdmi *hdmi)
 #endif	
 }
 
+#define DM_TX_TEST_MUX_CTRL	0x0
+#define DM_TX_CHIP_ID		0x1
+#define PLL_CTRL 		0x2
+#define OSC_CTRL		0x3
+#define OSC_ACLK_CTRL		0x4
+#define DM_TX_CTRL1		0x5
+#define DM_TX_CTRL2		0x6
+#define DM_TX_CTRL3		0x7
+#define DM_TX_CTRL4		0x8
+#define DM_TX_CTRL5		0x9
+#define BIAS_GEN_CTRL1		0xa
+#define BIAS_GEN_CTRL2		0xb
+#define DM_TX_STAT		0xc
+#define HDMI_CTRL		0xd
+#define HDMI_DRV_CTRL		0xe
+
 void hix5hd2_hdmi_phy_setup(struct hix5hd2_hdmi *hdmi)
 {
-	hix5hd2_hdmi_write_phy(hdmi, 0x6, 0x89);
-	hix5hd2_hdmi_write_phy(hdmi, 0xe, 0x0);
-	hix5hd2_hdmi_write_phy(hdmi, 0x7, 0x81);
-	hix5hd2_hdmi_write_phy(hdmi, 0x9, 0x1a);
-	hix5hd2_hdmi_write_phy(hdmi, 0xa, 0x7);
-	hix5hd2_hdmi_write_phy(hdmi, 0xb, 0x51);
-	hix5hd2_hdmi_write_phy(hdmi, 0x2, 0x24);
-	hix5hd2_hdmi_write_phy(hdmi, 0x5, 0x32);
-	hix5hd2_hdmi_write_phy(hdmi, 0x8, 0x40);
-	hix5hd2_hdmi_write_phy(hdmi, 0xd, 0x0);
+#if 0
+	hdmi->phy = devm_phy_get(&hdmi->dev, "hdmitx_phy");
+	phy_init(hdmi->phy);
+	phy_power_on(hdmi->phy);
+#else
+	hix5hd2_hdmi_write_phy(hdmi, DM_TX_CTRL2, 0x89);
+	hix5hd2_hdmi_write_phy(hdmi, HDMI_DRV_CTRL, 0x0);
+	hix5hd2_hdmi_write_phy(hdmi, DM_TX_CTRL3, 0x81);
+	hix5hd2_hdmi_write_phy(hdmi, DM_TX_CTRL5, 0x1a);
+	hix5hd2_hdmi_write_phy(hdmi, BIAS_GEN_CTRL1, 0x7);
+	hix5hd2_hdmi_write_phy(hdmi, BIAS_GEN_CTRL2, 0x51);
+	hix5hd2_hdmi_write_phy(hdmi, PLL_CTRL, 0x24);
+	hix5hd2_hdmi_write_phy(hdmi, DM_TX_CTRL1, 0x32);
+	hix5hd2_hdmi_write_phy(hdmi, DM_TX_CTRL4, 0x40);
+	hix5hd2_hdmi_write_phy(hdmi, HDMI_CTRL, 0x0);
+#endif	
 }
 
 void hix5hd2_hdmi_reset(struct hix5hd2_hdmi *hdmi)
@@ -281,9 +303,9 @@ int hix5hd2_hdmi_probe(struct platform_device *pdev)
 	if (IS_ERR(hdmi->base)) {
 		return PTR_ERR(hdmi->base);
 	}
-
+	hdmi->clk = devm_clk_get(&pdev->dev, NULL);
+	hix5hd2_hdmi_clk_setup(hdmi);	
 	hix5hd2_hdmi_ddc_setup(hdmi);
-	hix5hd2_hdmi_clk_setup(hdmi);
 	hix5hd2_hdmi_reset(hdmi);
 	hix5hd2_hdmi_phy_setup(hdmi);
 	hix5hd2_hdmi_write_page0(hdmi, SYS_CTRL1, 0x35);

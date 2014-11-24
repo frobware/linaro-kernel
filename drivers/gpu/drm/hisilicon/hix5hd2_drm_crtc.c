@@ -32,20 +32,15 @@
 
 static int hix5hd2_drm_clk_on(struct hix5hd2_drm_device *hdev)
 {
-	int ret;
-
-	if (hdev->clk) {
-		ret = clk_prepare_enable(hdev->clk);
-		if (ret < 0)
-			return ret;
-	}
+	if (hdev->clk) 
+		clk_prepare_enable(hdev->clk);
 
 	return 0;
 }
 
 static void hix5hd2_drm_clk_off(struct hix5hd2_drm_device *hdev)
 {
-	if (hdev->clk)
+	if (hdev->clk) 
 		clk_disable_unprepare(hdev->clk);
 }
 
