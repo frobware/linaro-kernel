@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <linux/acpi.h>
 #include <linux/export.h>
 #include <linux/kernel.h>
 #include <linux/stddef.h>
@@ -61,6 +62,7 @@
 #include <asm/memblock.h>
 #include <asm/psci.h>
 #include <asm/efi.h>
+#include <asm/acpi.h>
 
 unsigned int processor_id;
 EXPORT_SYMBOL(processor_id);
@@ -387,6 +389,8 @@ void __init setup_arch(char **cmdline_p)
 	early_fixmap_init();
 	early_ioremap_init();
 
+	disable_acpi();
+
 	parse_early_param();
 
 	/*
@@ -398,19 +402,28 @@ void __init setup_arch(char **cmdline_p)
 	efi_init();
 	arm64_memblock_init();
 
+	/* Parse the ACPI tables for possible boot-time configuration */
+	acpi_boot_table_init();
+
 	paging_init();
 	request_standard_resources();
 
 	efi_idmap_init();
 	early_ioremap_reset();
 
-	unflatten_device_tree();
-
-	psci_init();
-
-	cpu_read_bootcpu_ops();
+	if (acpi_disabled) {
+		unflatten_device_tree();
+		psci_dt_init();
+		cpu_read_bootcpu_ops();
 #ifdef CONFIG_SMP
-	smp_init_cpus();
+		of_smp_init_cpus();
+#endif
+	} else {
+		psci_acpi_init();
+		acpi_smp_init_cpus();
+	}
+
+#ifdef CONFIG_SMP
 	smp_build_mpidr_hash();
 #endif
 

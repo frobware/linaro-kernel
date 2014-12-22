@@ -27,6 +27,7 @@
 #define GICD_CTLR			0x0000
 #define GICD_TYPER			0x0004
 #define GICD_IIDR			0x0008
+#define GICD_SIDR			0x000c
 #define GICD_STATUSR			0x0010
 #define GICD_SETSPI_NSR			0x0040
 #define GICD_CLRSPI_NSR			0x0048
@@ -59,6 +60,7 @@
 #define GIC_PIDR2_ARCH_MASK		0xf0
 #define GIC_PIDR2_ARCH_GICv3		0x30
 #define GIC_PIDR2_ARCH_GICv4		0x40
+#define GIC_SID_MASK			0x7
 
 /*
  * Re-Distributor registers, offsets from RD_base
@@ -301,6 +303,11 @@
  */
 #define GIC_IRQ_TYPE_LPI		0xa110c8ed
 
+struct redist_region {
+	void __iomem		*redist_base;
+	unsigned long		phys_base;
+};
+
 struct rdists {
 	struct {
 		void __iomem	*rd_base;
@@ -308,6 +315,9 @@ struct rdists {
 		phys_addr_t	phys_base;
 	} __percpu		*rdist;
 	struct page		*prop_page;
+	struct redist_region	*regions;
+	u64			stride;
+	u32			nr_regions;
 	int			id_bits;
 	u64			flags;
 };
@@ -320,8 +330,7 @@ static inline void gic_write_eoir(u64 irq)
 
 struct irq_domain;
 int its_cpu_init(void);
-int its_init(struct device_node *node, struct rdists *rdists,
-	     struct irq_domain *domain);
+int its_init(struct rdists *rdists, struct irq_domain *domain);
 
 #endif
 
