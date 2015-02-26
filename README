@@ -1,7 +1,7 @@
 #To get the latest version
 git clone https://github.com/hisilicon/linaro-kernel.git -b estuary
 #To get specified branch with specified tag
-git checkout <branch name = estuary> <tag name = estuary_vx.x>
+git checkout <branch name = estuary> <tag name = estuary-vx.x>
 
 #To build it 
 export ARCH=arm64
