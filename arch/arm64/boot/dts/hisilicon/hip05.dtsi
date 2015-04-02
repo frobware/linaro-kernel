@@ -433,9 +433,9 @@
 
 	pcie@0xb0080000 {
 		compatible = "hisilicon,hip05-pcie", "snps,dw-pcie";
-		reg = <0 0xb0000000 0 0x10000>, <0 0xb0080000 0 0x10000>,
-			  <0 0xb00d0000 0 0x10000>, <0x220 0x00000000 0 0x1000>;
-		reg-names = "subctrl", "rc_dbi", "pcs", "config";
+		reg = <0 0xb0080000 0 0x10000>, <0 0xb0000000 0 0x10000>,
+		      <0 0xb00d0000 0 0x10000>, <0x220 0x00000000 0 0x1000>;
+		reg-names = "rc_dbi", "subctrl", "pcs", "config";
 		bus-range = <0  15>;
 		msi-parent = <&its_pcie>;
 		#address-cells = <3>;
@@ -456,9 +456,9 @@
 
 	pcie@0xb0090000 {
 		compatible = "hisilicon,hip05-pcie", "snps,dw-pcie";
-		reg = <0 0xb0000000 0 0x10000>, <0 0xb0090000 0 0x10000>,
-			  <0 0xb00e0000 0 0x10000>, <0x240 0x00000000 0 0x1000>;
-		reg-names = "subctrl", "rc_dbi", "pcs", "config";
+		reg = <0 0xb0090000 0 0x10000>, <0 0xb0000000 0 0x10000>,
+		      <0 0xb00e0000 0 0x10000>, <0x240 0x00000000 0 0x1000>;
+		reg-names = "rc_dbi", "subctrl", "pcs", "config";
 		bus-range = <80 95>;
 		msi-parent = <&its_pcie>;
 		#address-cells = <3>;
@@ -467,7 +467,7 @@
 		ranges = <0x82000000 0 0xb5100000 0x240 0x00000000 0 0x00f00000>;
 		num-lanes = <4>;
 		port-id = <2>;
-		status = "disabled";
+		status = "ok";
 	};
 
 	/include/ "hip05_xge.dtsi"

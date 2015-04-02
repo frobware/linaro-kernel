@@ -498,7 +498,8 @@ static int __init hisi_pcie_probe(struct platform_device *pdev)
 	pp->dev = &pdev->dev;
 
 	subctrl = platform_get_resource_byname(pdev, IORESOURCE_MEM, "subctrl");
-	hisi_pcie->subctrl_base = devm_ioremap_resource(&pdev->dev, subctrl);
+	hisi_pcie->subctrl_base = devm_ioremap_nocache(&pdev->dev,
+					subctrl->start, resource_size(subctrl));
 	if (IS_ERR(hisi_pcie->subctrl_base))
 		return PTR_ERR(hisi_pcie->subctrl_base);
 
