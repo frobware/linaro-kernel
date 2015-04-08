@@ -61,7 +61,7 @@
 };
 
 &m3_i2c1 {
-	clock-frequency = <400000>;
+	clock-frequency = <100000>;
 	status = "okay";
 
 	rtc: ds3231@68 {
